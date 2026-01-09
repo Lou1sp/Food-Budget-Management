@@ -1,0 +1,23 @@
+{
+  "development": {
+    "username": "postgres",
+    "password": "Dickcutethe114",
+    "database": "food_budget_db",
+    "host": "127.0.0.1",
+    "dialect": "postgres"
+  },
+  "test": {
+    "username": "postgres",
+    "password": "Dickcutethe114",
+    "database": "food_budget_test",
+    "host": "127.0.0.1",
+    "dialect": "postgres"
+  },
+  "production": {
+    "username": "postgres",
+    "password": "Dickcutethe114",
+    "database": "food_budget_prod",
+    "host": "127.0.0.1",
+    "dialect": "postgres"
+  }
+}
