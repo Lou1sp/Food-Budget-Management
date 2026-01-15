@@ -1,12 +1,11 @@
 'use client'
 import {Menu, X} from "lucide-react";
-import Link from "next/link";
 interface HeaderProps{
     sideBarHandler: () => void;
 }
 export default function Header({sideBarHandler}: HeaderProps){
     return(
-        <div className="w-full bg-blue-600 h-17 flex items-center justify-between">
+        <div className="sticky top-0 z-50 w-full bg-blue-600 h-17 flex items-center justify-between relative z-20">
              <div className="flex ml-5">
                 <button className="cursor-pointer " onClick={sideBarHandler}>
                    <div className="border border-white rounded-md p-1">
