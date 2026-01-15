@@ -2,7 +2,7 @@ import Image from "next/image";
 import profilePic from "../../public/profile_picture.jpg"
 export default function SideNavBar() {
   return (
-    <aside className="fixed top-0 left-0 w-64 bg-white shadow-lg z-50 h-[calc(100vh-4.25rem)]">
+    <aside className="fixed w-64 bg-white shadow-lg z-50 h-[calc(100vh-4.25rem)]">
       <div className="mt-5 mb-8 ml-5 flex items-center gap-3">
         <Image src={profilePic} alt="" width={70} height={50}></Image>
         <div className="text-gray-700 font-mono font-light">
