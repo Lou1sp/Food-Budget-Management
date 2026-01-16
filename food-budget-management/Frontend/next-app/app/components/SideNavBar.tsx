@@ -19,25 +19,25 @@ export default function SideNavBar() {
           href="#activity"
           className="text-gray-700 hover:bg-blue-100 hover:text-blue-700 px-3 py-2 rounded transition-colors duration-200"
         >
-          Activity
+          Budget & Activities
         </a>
         <a
           href="#budget"
           className="text-gray-700 hover:bg-blue-100 hover:text-blue-700 px-3 py-2 rounded transition-colors duration-200"
         >
-          Budget
+          Market
         </a>
         <a
           href="#records"
           className="text-gray-700 hover:bg-blue-100 hover:text-blue-700 px-3 py-2 rounded transition-colors duration-200"
         >
-          Records
+          Create Your Recipes
         </a>
         <a
           href="#market"
           className="text-gray-700 hover:bg-blue-100 hover:text-blue-700 px-3 py-2 rounded transition-colors duration-200"
         >
-          Market
+          Calories Calculator
         </a>
       </nav>
 
