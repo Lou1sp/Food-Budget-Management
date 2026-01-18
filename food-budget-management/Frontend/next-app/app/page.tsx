@@ -1,11 +1,11 @@
 "use client"
-import Header from "./components/Header";
-import SideNavBar from "./components/SideNavBar";
-import Hero_Section from "./components/Hero_Section";
-import News_Board from "./components/Categories";
-import StoryTelling from "./components/StoryTelling";
-import MissionSection from "./components/MissionSection";
-import Footer from "./components/Footer";
+import Header from "../component/home_page/Header";
+import SideNavBar from "../component/home_page/SideNavBar";
+import Hero_Section from "../component/home_page/Hero_Section";
+import News_Board from "../component/home_page/Categories";
+import StoryTelling from "../component/home_page/StoryTelling";
+import MissionSection from "../component/home_page/MissionSection";
+import Footer from "../component/home_page/Footer";
 import { useState } from "react";
 export default function Home() {
   const [sideBarOpen, setSideBarState] = useState(false);
