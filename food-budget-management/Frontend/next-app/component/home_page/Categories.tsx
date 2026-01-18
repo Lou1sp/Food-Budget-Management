@@ -65,7 +65,7 @@ export default function NewsBoard() {
               </p>
 
               {/* Image */}
-              <div className="relative w-[200px] h-[120px] shrink-0 overflow-hidden rounded-xl">
+              <div className="relative w-50 h-30 shrink-0 overflow-hidden rounded-xl">
                 <Image
                   src={item.image}
                   alt={item.title}

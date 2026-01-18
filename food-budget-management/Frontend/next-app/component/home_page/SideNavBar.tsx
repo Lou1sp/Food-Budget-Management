@@ -5,12 +5,9 @@ export default function SideNavBar() {
     <aside className="fixed w-64 bg-white shadow-lg z-50 h-[calc(100vh-4.25rem)]">
       <div className="mt-5 mb-8 ml-5 flex items-center gap-3">
         <Image src={profilePic} alt="" width={70} height={50}></Image>
-        <div className="text-gray-700 font-mono font-light">
-           <i> 
+        <div className="text-gray-700 font-mono font-light italic">
             <p>User Name</p> 
             <p>ID:11042005</p>
-           </i>
-            
         </div>
       </div>
 
@@ -43,7 +40,7 @@ export default function SideNavBar() {
 
       <hr className="text-black mx-auto w-50 mt-20"></hr>
 
-      <nav className="flex flex-col gap-4 font-mono ml-5 mr-5 mt-5 font-extralight">
+      <nav className="flex flex-col gap-4 font-mono ml-5 mr-5 mt-5">
         <a
           href="#market"
           className="text-gray-700 hover:bg-blue-100 hover:text-blue-700 px-3 py-2 rounded transition-colors duration-200"

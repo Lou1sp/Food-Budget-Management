@@ -3,7 +3,7 @@ export default function MissionSection() {
     <section className="mt-50 px-6 mb-20">
       <div className="max-w-4xl mx-auto text-center">
         {/* Heading */}
-        <h2 className="text-3xl md:text-4xl font-serif font-bold text-gray-600">
+        <h2 className="text-3xl md:text-4xl font-serif font-bold text-blue-400">
           Let’s put an end to unnecessary food waste — together.
         </h2>
 
