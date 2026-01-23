@@ -2,7 +2,7 @@
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
-import sequelize from "./models/index.ts"; // models/index.ts export default sequelize
+import { sequelize } from "./models/index.ts"; // models/index.ts export default sequelize
 
 dotenv.config();
 
@@ -22,13 +22,13 @@ app.get("/", (req, res) => {
 const startServer = async () => {
   try {
     await sequelize.authenticate();
-    console.log("✅ PostgreSQL connected via Sequelize");
-
+    console.log("PostgreSQL connected via Sequelize");
+    await sequelize.sync({ alter: true });
     app.listen(PORT, () => {
       console.log(`🚀 Server running on http://localhost:${PORT}`);
     });
   } catch (err) {
-    console.error("❌ Unable to connect to the database:", err);
+    console.error("Unable to connect to the database:", err);
   }
 };
 
