@@ -9,7 +9,7 @@ export default function Hero_Section(){
                 <h1 className="text-blue-300 text-6xl font-serif font-bold max-w-6xl ">Take control of your food budget – track, manage, and spend smarter every day!</h1>
                 <div className="mt-5">
                     <a className="inline-block bg-blue-500 pt-3 pb-3 pl-5 pr-5 rounded-md cursor-pointer font-extralight transition-transform duration-150 hover:-translate-y-3 ">Log In</a>
-                    <a className="inline-block cursor-pointer font-extralight pt-3 pb-3 pl-5 pr-5 transition-transform duration-150 hover:-translate-y-3">Sign Up</a>
+                    <a href="/signup" className="inline-block cursor-pointer font-extralight pt-3 pb-3 pl-5 pr-5 transition-transform duration-150 hover:-translate-y-3">Sign Up</a>
                 </div>
             </div>
 
