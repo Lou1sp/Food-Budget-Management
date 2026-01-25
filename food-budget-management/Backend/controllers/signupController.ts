@@ -13,6 +13,7 @@ export async function signUp(req: Request, res: Response){
                    .json({
                     message: "Email already in use"
                    });
+                }
         
         //Hash Password
         const hashedPassword = await bcrypt.hash(password, 10);
@@ -24,7 +25,7 @@ export async function signUp(req: Request, res: Response){
             message: "User created",
             userId: newUser.id
         });
-        }
+       
     } catch (err) {
         console.error(err);
         res.status(500).json({
