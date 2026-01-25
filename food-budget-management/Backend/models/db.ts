@@ -1,6 +1,6 @@
 //Initializing Sequelize
 import { Sequelize } from "sequelize"; 
-import config from "../config/Database.ts"; 
+import config from "../config/Database"; 
 import dotenv from "dotenv"; 
 dotenv.config(); 
 

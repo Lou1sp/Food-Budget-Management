@@ -1,5 +1,5 @@
 import { DataTypes, Model } from "sequelize";
-import  { sequelize } from "./db.ts";
+import  { sequelize } from "./db";
 export default class User extends Model{
     declare id: number;
     declare username: string;
