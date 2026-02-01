@@ -1,19 +1,28 @@
 'use client';
+//This hook help check if user is logged in or no 
+import { useState } from 'react';
 
-import { useState, useEffect } from 'react';
+type User = {
+  id: string;
+  email: string;
+  name: string;
+};
 
 export function useAuth() {
   const [token, setToken] = useState<string | null>(() => {
-    return typeof window !== 'undefined' ? localStorage.getItem('token') : null;
-  });
-
-  const [user, setUser] = useState<unknown>(() => {
     if (typeof window === 'undefined') return null;
-    const data = localStorage.getItem('user');
-    return data ? JSON.parse(data) : null;
+    return localStorage.getItem('token');
   });
 
-  const isLoggedIn = !!token;
+  const [user, setUser] = useState<User | null>(() => {
+    if (typeof window === 'undefined') return null;
+    const stored = localStorage.getItem('user');
+    return stored ? JSON.parse(stored) : null;
+  });
 
-  return { isLoggedIn, user, token };
+  return {
+    user,
+    token,
+    isLoggedIn: !!token,
+  };
 }
