@@ -1,48 +1,51 @@
-"use client"
-import { useState } from "react";
+'use client';
+import { useState } from 'react';
 export default function SigninForm() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
 
   const handleSignIn = async () => {
     try {
-      const res = await fetch("http://localhost:5000/api/auth/login", {
-        method: "POST",
+      const res = await fetch('http://localhost:5000/api/auth/login', {
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
-        body: JSON.stringify(
-          {
-            email,
-            password
-          }
-        )
+        body: JSON.stringify({
+          email,
+          password,
+        }),
       });
 
-      if(!res.ok) {
-        throw new Error("Login Failed!");
+      if (!res.ok) {
+        throw new Error('Login Failed!');
       }
 
       const data = await res.json();
 
       //Save token and user in localStorage
-      localStorage.setItem("token", data.token);
-      localStorage.setItem("user", JSON.stringify(data.user));
-      console.log("Login successful, here is your token: ", data.token); //From now on, if you want to call API to get data of user, you have to put header with token in the API call
-      //Redirect after logged in 
-      window.location.href = "/dashboard"
+      localStorage.setItem('token', data.token);
+      localStorage.setItem('user', JSON.stringify(data.user));
+      //From now on, if you want to call API to get data of user, you have to put header with token in the API call, then make it go to middleware first
+      console.log('Login successful, here is your token: ', data.token);
+
+      //Redirect after logged in
+      window.location.href = '/dashboard';
     } catch {
-      setError("Incorrect email or password");
+      setError('Incorrect email or password');
     }
-  }
+  };
 
   return (
     <div className="w-full max-w-xl p-8 rounded-lg">
-      <form className="flex flex-col space-y-4 items-center" onSubmit={(e) => {
-        e.preventDefault();
-        handleSignIn();
-      }}>
+      <form
+        className="flex flex-col space-y-4 items-center"
+        onSubmit={(e) => {
+          e.preventDefault();
+          handleSignIn();
+        }}
+      >
         <div className="flex gap-5">
           <div className="flex-col">
             <p className="text-blue-400 font-sans mb-1">Email</p>
@@ -70,18 +73,20 @@ export default function SigninForm() {
             />
           </div>
         </div>
-         {error &&
-        <div>
-          <p className="text-red-500">{error} !</p>
-        </div>
-        }
-        <a href="" className="text-blue-500 mt-2 flex hover:underline">Forgot your password ?</a>
+        {error && (
+          <div>
+            <p className="text-red-500">{error} !</p>
+          </div>
+        )}
+        <a href="" className="text-blue-500 mt-2 flex hover:underline">
+          Forgot your password ?
+        </a>
 
         <button
           type="submit"
           className="w-80 mt-2 bg-blue-600 text-white font-semibold py-3 rounded-lg hover:bg-blue-700 transition duration-200 cursor-pointer"
         >
-            Sign In
+          Sign In
         </button>
 
         <div className="flex gap-2">
