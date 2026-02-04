@@ -30,12 +30,11 @@ export default function PieChartByCategory({ categories }: Props) {
       options={{
         plugins: {
           legend: {
-            position: "right",
+            position: 'right',
             labels: {
-            font: {
+              font: {
                 size: 16,
-            },
-              color: 'white',
+              },
               padding: 20,
             },
           },

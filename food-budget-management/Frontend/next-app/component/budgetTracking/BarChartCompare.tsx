@@ -44,7 +44,6 @@ export default function BarChartByCategory({ monthlySpent }: Props) {
               font: {
                 size: 16,
               },
-              color: 'white',
               padding: 20,
             },
           },

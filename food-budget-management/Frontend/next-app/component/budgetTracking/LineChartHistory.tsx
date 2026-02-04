@@ -41,16 +41,20 @@ export default function LineChartHistory({ history }: Props) {
       },
     ],
   };
-  return <Line data={data} options={{
+  return (
+    <Line
+      data={data}
+      options={{
         plugins: {
           legend: {
             labels: {
-            font: {
+              font: {
                 size: 15,
-            },
-              color: 'white',
+              },
             },
           },
         },
-      }}></Line>;
+      }}
+    ></Line>
+  );
 }
