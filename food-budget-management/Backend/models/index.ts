@@ -1,8 +1,35 @@
-//Import models for initializing
-import "./userAcc"
+import { sequelize } from "./db";
 
-//Define relationship between models
-// User.hasMany(Post);
-// Post.belongsTo(User);
+import User from "./userAcc";
+import Budget from "./monthlyBudget";
+import Category from "./marketCategory";
+import Transaction from "./dailyTransaction";
 
-export {sequelize} from "./db"
+/* ========== ASSOCIATIONS ========== */
+
+// User
+User.hasMany(Budget, { foreignKey: "user_id" });
+User.hasMany(Category, { foreignKey: "user_id" });
+User.hasMany(Transaction, { foreignKey: "user_id" });
+
+// Budget
+Budget.belongsTo(User, { foreignKey: "user_id" });
+Budget.hasMany(Transaction, { foreignKey: "budget_id" });
+
+// Category
+Category.belongsTo(User, { foreignKey: "user_id" });
+Category.hasMany(Transaction, { foreignKey: "category_id" });
+
+// Transaction
+Transaction.belongsTo(User, { foreignKey: "user_id" });
+Transaction.belongsTo(Category, { foreignKey: "category_id" });
+Transaction.belongsTo(Budget, { foreignKey: "budget_id" });
+
+/* ========== EXPORTS ========== */
+export {
+  sequelize,
+  User,
+  Budget,
+  Category,
+  Transaction,
+};

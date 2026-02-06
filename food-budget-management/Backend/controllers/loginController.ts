@@ -3,7 +3,7 @@ import bcrypt from "bcrypt";
 import { Request, Response } from "express";
 import User from "../models/userAcc";
 
-export const login = async (req: Request, res: Response) => {
+export async function login(req: Request, res: Response) {
     //Receive json from frontend
     const {email, password} = req.body;
     

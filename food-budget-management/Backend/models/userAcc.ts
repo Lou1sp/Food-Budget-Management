@@ -1,39 +1,45 @@
 import { DataTypes, Model } from "sequelize";
-import  { sequelize } from "./db";
-export default class User extends Model{
-    declare id: number;
-    declare username: string;
-    declare email: string;
-    declare hashedPassword: string;
+import { sequelize } from "./db";
+export default class User extends Model {
+  declare id: number;
+  declare username: string;
+  declare email: string;
+  declare hashedPassword: string;
 }
 
 User.init(
-    {
-        id: {
-            type: DataTypes.INTEGER,
-            autoIncrement: true,
-            primaryKey: true,
-        },
-        
-        username: {
-            type: DataTypes.STRING(255),
-            allowNull: false,
-        },
-        
-        email: {
-            type: DataTypes.STRING(255),
-            allowNull: false,
-        }, 
-
-        hashedPassword: {
-            type: DataTypes.STRING(255),
-            allowNull: false,
-        }
+  {
+    id: {
+      type: DataTypes.INTEGER,
+      autoIncrement: true,
+      primaryKey: true,
     },
-    {
-        sequelize,
-        modelName: "User",
-        tableName: "userAccount",
-        timestamps: true,
-    }
-)
+
+    username: {
+      type: DataTypes.STRING(255),
+      allowNull: false,
+    },
+
+    email: {
+      type: DataTypes.STRING(255),
+      allowNull: false,
+    },
+
+    hashedPassword: {
+      type: DataTypes.STRING(255),
+      allowNull: false,
+    },
+  },
+  {
+    sequelize,
+    modelName: "User",
+    tableName: "userAccount",
+    timestamps: true,
+    indexes: [
+      {
+        unique: true,
+        fields: ["email"],
+      },
+    ],
+  },
+);

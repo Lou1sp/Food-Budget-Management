@@ -18,7 +18,7 @@ app.get("/", (req, res) => {
   res.send("Hello, backend is running!");
 });
 
-//Forward any calls with /api/auth to authRoute - handle signup/login
+//Forward ani auth call like /api/auth/... to authRoute
 app.use("/api/auth", authRoute)
 
 // Start server only after DB connection

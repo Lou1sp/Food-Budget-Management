@@ -12,44 +12,21 @@ import DonutChartBudget from '@/component/budgetTracking/DonutChartBudget';
 import BarChartByCategory from '@/component/budgetTracking/BarChartCompare';
 import { useState } from 'react';
 import { useAuth } from '@/hooks/userAuth';
-import { Line } from 'react-chartjs-2';
 export default function Home() {
   const [sideBarOpen, setSideBarState] = useState(false);
   const isLoggedIn = useAuth();
   console.log(sideBarOpen);
 
   const data = {
-    budget: 1000,
-    spent: 400,
+    budget: 0,
+    spent: 0,
     categories: [
-      { name: 'Protein', spent: 150 },
-      { name: 'Vegetable', spent: 100 },
-      { name: 'Drugs', spent: 70 },
-      { name: 'TPBS', spent: 20 },
-      { name: 'Seeds', spent: 350 },
-      { name: 'Snacks', spent: 50 },
-      { name: 'Frozen', spent: 10 },
-      { name: 'Dairy', spent: 51 },
-      { name: 'Other', spent: 102 },
     ],
     history: [
-      { date: '2026-01-01', spent: 50 },
-      { date: '2026-01-05', spent: 100 },
-      { date: '2026-01-10', spent: 250 },
+     
     ],
     monthlySpent: [
-      { month: 'January', spent: 250 },
-      { month: 'February', spent: 380 },
-      { month: 'March', spent: 170 },
-      { month: 'April', spent: 195 },
-      { month: 'May', spent: 230 },
-      { month: 'June', spent: 530 },
-      { month: 'July', spent: 117 },
-      { month: 'August', spent: 120 },
-      { month: 'September', spent: 300 },
-      { month: 'October', spent: 220 },
-      { month: 'Novemver', spent: 70 },
-      { month: 'December', spent: 112 },
+      
     ],
   };
   return (
@@ -71,11 +48,11 @@ export default function Home() {
       )}
 
       {isLoggedIn && (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 p-8 bg-gradient-to-br ">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 p-8 bg-linear-to-br bg-white">
           {/* Chi tiêu theo category */}
-          <div className="bg-white p-6 rounded-2xl  border border-slate-200">
+          <div className="bg-white p-6 rounded-2xl shadow-lg hover:shadow-2xl transition-shadow duration-300 border border-slate-200">
             <div className="flex items-center gap-3 mb-4">
-              <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center">
+              <div className="w-10 h-10 linear-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center">
                 <svg
                   className="w-6 h-6 text-white"
                   fill="none"
@@ -97,20 +74,20 @@ export default function Home() {
                 </svg>
               </div>
               <h2 className="text-xl font-bold text-slate-800">
-                Chi tiêu theo category
+                Expense by Category
               </h2>
             </div>
             <div className="mt-4 flex justify-center items-center">
-              <div className="w-full max-w-sm">
+              <div className="w-full max-w-md">
                 <PieChartByCategory categories={data.categories} />
               </div>
             </div>
           </div>
 
           {/* Budget đã dùng */}
-          <div className="bg-white p-6 rounded-2xl shadow-lg hover:shadow-xl transition-shadow duration-300 border border-slate-200">
+          <div className="bg-white p-6 rounded-2xl shadow-lg hover:shadow-2xl transition-shadow duration-300 border border-slate-200">
             <div className="flex items-center gap-3 mb-4">
-              <div className="w-10 h-10 bg-gradient-to-br from-amber-500 to-amber-600 rounded-xl flex items-center justify-center">
+              <div className="w-10 h-10 linear-to-br from-amber-500 to-amber-600 rounded-xl flex items-center justify-center">
                 <svg
                   className="w-6 h-6 text-white"
                   fill="none"
@@ -126,20 +103,20 @@ export default function Home() {
                 </svg>
               </div>
               <h2 className="text-xl font-bold text-slate-800">
-                Budget đã dùng
+                Your total budget
               </h2>
             </div>
             <div className="mt-4 flex justify-center items-center">
-              <div className="w-full max-w-sm">
+              <div className="w-full max-w-md">
                 <DonutChartBudget spent={data.spent} budget={data.budget} />
               </div>
             </div>
           </div>
 
           {/* So sánh chi tiêu theo category */}
-          <div className="bg-white p-6 rounded-2xl shadow-lg hover:shadow-xl transition-shadow duration-300 border border-slate-200">
+          <div className="bg-white p-6 rounded-2xl shadow-lg hover:shadow-2xl transition-shadow duration-300 border border-slate-200">
             <div className="flex items-center gap-3 mb-4">
-              <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl flex items-center justify-center">
+              <div className="w-10 h-10 bg-linear-to-br from-purple-500 to-purple-600 rounded-xl flex items-center justify-center">
                 <svg
                   className="w-6 h-6 text-white"
                   fill="none"
@@ -155,17 +132,17 @@ export default function Home() {
                 </svg>
               </div>
               <h2 className="text-xl font-bold text-slate-800">
-                So sánh theo category
+                Year Overview
               </h2>
             </div>
-            <div className="mt-4">
+            <div className="mt-4 max-w-full">
               <BarChartByCategory monthlySpent={data.monthlySpent} />
             </div>
           </div>
           {/* Lịch sử chi tiêu */}
-          <div className="bg-white p-6 rounded-2xl shadow-lg hover:shadow-xl transition-shadow duration-300 border border-slate-200">
+          <div className="bg-white p-6 rounded-2xl shadow-lg hover:shadow-2xl transition-shadow duration-300 border border-slate-200">
             <div className="flex items-center gap-3 mb-4">
-              <div className="w-10 h-10 bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-xl flex items-center justify-center">
+              <div className="w-10 h-10 bg-linear-to-br from-emerald-500 to-emerald-600 rounded-xl flex items-center justify-center">
                 <svg
                   className="w-6 h-6 text-white"
                   fill="none"
@@ -181,10 +158,10 @@ export default function Home() {
                 </svg>
               </div>
               <h2 className="text-xl font-bold text-slate-800">
-                Lịch sử chi tiêu
+                Spending History
               </h2>
             </div>
-            <div className="mt-4">
+            <div className="mt-4 max-w-full">
               <LineChartHistory history={data.history} />
             </div>
           </div>
