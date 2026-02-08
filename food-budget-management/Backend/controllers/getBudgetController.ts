@@ -1,14 +1,36 @@
-import {Request, Response} from "express"
+import { Request, Response } from "express";
 import { Budget } from "../models";
-export default async function getBudgetByMonth(req: Request, res: Response){
-    const userID = (req as any).user.id; //user get from Middleware
 
-    //Use req.query to deal with GET /budgets?month=x&year=y, now we inject x and y to [month, year]
-    const {month, year} = req.query;
+export default async function getBudgetByMonth(req: Request, res: Response) { 
+  try {    
+    const userID = (req as any).user.id;
+    const { month, year } = req.query;
 
-    const budgets = await Budget.findAll({
-        where: {userID, month, year}
+    console.log('Query params:', { month, year, userID });
+
+    const monthNum = parseInt(month as string);
+    const yearNum = parseInt(year as string);
+
+
+    
+    const budgets = await Budget.findOne({
+      where: { user_id: userID, month: monthNum, year: yearNum }
     });
 
-    res.json(budgets);
+    console.log('Query result:', budgets);
+
+    if (budgets == null) {
+      console.log('No budget found, returning 0');
+      return res.json({ budget: 0 });
+    }
+
+    console.log('Returning budget:', budgets.amount);
+    res.json({ 
+      budget: budgets.amount
+    });
+
+  } catch (err) {
+    console.error('FULL ERROR:', err); 
+    res.status(500).json({ error: "Failed to fetch budget" });
+  }
 }

@@ -15,10 +15,10 @@ export default async function getTransactionsByMonth(req: Request, res: Response
 
     const transactions = await Transaction.findAll({
         where: {
-            userID,
-            date: {[Op.between ]: [from, to]},
+            user_id: userID,
+            spent_at: {[Op.between ]: [from, to]},
         },
-        order: [['date', 'ASC']],
+        order: [['spent_at', 'ASC']],
     });
 
     res.json(transactions)

@@ -31,7 +31,7 @@ export default function SigninForm() {
       console.log('Login successful, here is your token: ', data.token);
 
       //Redirect after logged in
-      window.location.href = '/dashboard';
+      window.location.href = '/';
     } catch {
       setError('Incorrect email or password');
     }

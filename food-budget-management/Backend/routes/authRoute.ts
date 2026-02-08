@@ -1,7 +1,6 @@
 import { Router } from "express";
 import { signUp } from "../controllers/signupController";
 import { login } from "../controllers/loginController";
-import { authMiddleware } from "../middleware/authMiddleware";
 const router = Router();
 
 //Defining Routes

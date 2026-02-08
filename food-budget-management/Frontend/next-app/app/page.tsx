@@ -10,49 +10,60 @@ import Footer from '../component/home_page/Footer';
 import LineChartHistory from '@/component/budgetTracking/LineChartHistory';
 import DonutChartBudget from '@/component/budgetTracking/DonutChartBudget';
 import BarChartByCategory from '@/component/budgetTracking/BarChartCompare';
-import { useState } from 'react';
 import { useAuth } from '@/hooks/userAuth';
+import { useState, useEffect } from 'react';
+
+
 export default function Home() {
   const [sideBarOpen, setSideBarState] = useState(false);
-  const isLoggedIn = useAuth();
-  console.log(sideBarOpen);
+  const [isMounted, setIsMounted] = useState(false);
+  const { token } = useAuth();
+
+  //isMounted = true means all components have mounted on Client, and everything is ready, because isMounted in in useState - component in Client side, which means when it turns true, client is ready
+  useEffect(() => {
+    const id = setTimeout(() => setIsMounted(true), 0);
+    return () => clearTimeout(id);
+  }, []);
+
+  const isLoggedIn = token != null;
 
   const data = {
     budget: 0,
     spent: 0,
-    categories: [
-    ],
-    history: [
-     
-    ],
-    monthlySpent: [
-      
-    ],
+    categories: [],
+    history: [],
+    monthlySpent: [],
   };
+
   return (
     <div className="bg-black">
-      <Header sideBarHandler={() => setSideBarState(!sideBarOpen)}></Header>
+      <Header sideBarHandler={() => setSideBarState(!sideBarOpen)} />
       <div
-        className={`sticky top-17 transform transition-transform duration-500 ${sideBarOpen ? 'translate-x-0' : '-translate-x-64'}`}
+        className={`sticky top-17 transform transition-transform duration-500 ${
+          sideBarOpen ? 'translate-x-0' : '-translate-x-64'
+        }`}
       >
         <SideNavBar />
       </div>
-      {!isLoggedIn && (
+
+      {/* ✅ Chỉ render conditional content sau khi mounted */}
+      {isMounted && !isLoggedIn && (
         <div>
-          <Hero_Section></Hero_Section>
-          <StoryTelling></StoryTelling>
-          <News_Board></News_Board>
-          <MissionSection></MissionSection>
-          <Footer></Footer>
+          <Hero_Section />
+          <StoryTelling />
+          <News_Board />
+          <MissionSection />
+          <Footer />
         </div>
       )}
 
-      {isLoggedIn && (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 p-8 bg-linear-to-br bg-white">
+      {isMounted && isLoggedIn && (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 p-8 bg-white">
           {/* Chi tiêu theo category */}
           <div className="bg-white p-6 rounded-2xl shadow-lg hover:shadow-2xl transition-shadow duration-300 border border-slate-200">
             <div className="flex items-center gap-3 mb-4">
-              <div className="w-10 h-10 linear-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center">
+              <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center">
+                {/* ↑ Sửa bg-linear → bg-gradient */}
                 <svg
                   className="w-6 h-6 text-white"
                   fill="none"
@@ -87,7 +98,8 @@ export default function Home() {
           {/* Budget đã dùng */}
           <div className="bg-white p-6 rounded-2xl shadow-lg hover:shadow-2xl transition-shadow duration-300 border border-slate-200">
             <div className="flex items-center gap-3 mb-4">
-              <div className="w-10 h-10 linear-to-br from-amber-500 to-amber-600 rounded-xl flex items-center justify-center">
+              <div className="w-10 h-10 bg-gradient-to-br from-amber-500 to-amber-600 rounded-xl flex items-center justify-center">
+                {/* ↑ Sửa */}
                 <svg
                   className="w-6 h-6 text-white"
                   fill="none"
@@ -108,7 +120,7 @@ export default function Home() {
             </div>
             <div className="mt-4 flex justify-center items-center">
               <div className="w-full max-w-md">
-                <DonutChartBudget spent={data.spent} budget={data.budget} />
+                <DonutChartBudget />
               </div>
             </div>
           </div>
@@ -116,7 +128,8 @@ export default function Home() {
           {/* So sánh chi tiêu theo category */}
           <div className="bg-white p-6 rounded-2xl shadow-lg hover:shadow-2xl transition-shadow duration-300 border border-slate-200">
             <div className="flex items-center gap-3 mb-4">
-              <div className="w-10 h-10 bg-linear-to-br from-purple-500 to-purple-600 rounded-xl flex items-center justify-center">
+              <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl flex items-center justify-center">
+                {/* ↑ Sửa */}
                 <svg
                   className="w-6 h-6 text-white"
                   fill="none"
@@ -139,10 +152,12 @@ export default function Home() {
               <BarChartByCategory monthlySpent={data.monthlySpent} />
             </div>
           </div>
+
           {/* Lịch sử chi tiêu */}
           <div className="bg-white p-6 rounded-2xl shadow-lg hover:shadow-2xl transition-shadow duration-300 border border-slate-200">
             <div className="flex items-center gap-3 mb-4">
-              <div className="w-10 h-10 bg-linear-to-br from-emerald-500 to-emerald-600 rounded-xl flex items-center justify-center">
+              <div className="w-10 h-10 bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-xl flex items-center justify-center">
+                {/* ↑ Sửa */}
                 <svg
                   className="w-6 h-6 text-white"
                   fill="none"
@@ -162,7 +177,7 @@ export default function Home() {
               </h2>
             </div>
             <div className="mt-4 max-w-full">
-              <LineChartHistory history={data.history} />
+              <LineChartHistory/>
             </div>
           </div>
         </div>

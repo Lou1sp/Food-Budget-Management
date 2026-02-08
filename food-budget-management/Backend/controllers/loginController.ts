@@ -21,7 +21,7 @@ export async function login(req: Request, res: Response) {
     //If credentials are all passed, create JWT token
     const token = jwt.sign(
         {
-            if: user.id,
+            id: user.id,
             email: user.email,
         },
         process.env.JWT_SECRET!,
