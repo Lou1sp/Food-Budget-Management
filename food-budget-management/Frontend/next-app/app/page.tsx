@@ -13,13 +13,11 @@ import BarChartByCategory from '@/component/budgetTracking/BarChartCompare';
 import { useAuth } from '@/hooks/userAuth';
 import { useState, useEffect } from 'react';
 
-
 export default function Home() {
   const [sideBarOpen, setSideBarState] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
   const { token } = useAuth();
 
-  //isMounted = true means all components have mounted on Client, and everything is ready, because isMounted in in useState - component in Client side, which means when it turns true, client is ready
   useEffect(() => {
     const id = setTimeout(() => setIsMounted(true), 0);
     return () => clearTimeout(id);
@@ -27,16 +25,8 @@ export default function Home() {
 
   const isLoggedIn = token != null;
 
-  const data = {
-    budget: 0,
-    spent: 0,
-    categories: [],
-    history: [],
-    monthlySpent: [],
-  };
-
   return (
-    <div className="bg-black">
+    <div className="bg-black min-h-screen">
       <Header sideBarHandler={() => setSideBarState(!sideBarOpen)} />
       <div
         className={`sticky top-17 transform transition-transform duration-500 ${
@@ -46,7 +36,7 @@ export default function Home() {
         <SideNavBar />
       </div>
 
-      {/* ✅ Chỉ render conditional content sau khi mounted */}
+      {/* Landing Page */}
       {isMounted && !isLoggedIn && (
         <div>
           <Hero_Section />
@@ -57,130 +47,177 @@ export default function Home() {
         </div>
       )}
 
+      {/* Dashboard */}
       {isMounted && isLoggedIn && (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 p-8 bg-white">
-          {/* Chi tiêu theo category */}
-          <div className="bg-white p-6 rounded-2xl shadow-lg hover:shadow-2xl transition-shadow duration-300 border border-slate-200">
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center">
-                {/* ↑ Sửa bg-linear → bg-gradient */}
-                <svg
-                  className="w-6 h-6 text-white"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z"
-                  />
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z"
-                  />
-                </svg>
-              </div>
-              <h2 className="text-xl font-bold text-slate-800">
-                Expense by Category
-              </h2>
+        <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-slate-100 py-8 px-4 sm:px-6 lg:px-8">
+   
+            {/* Page Header */}
+            <div className="mb-8">
+              <h1 className="text-4xl font-bold bg-gradient-to-r from-slate-800 to-slate-600 bg-clip-text text-transparent mb-2">
+                Financial Dashboard
+              </h1>
+              <p className="text-slate-600 text-lg">
+                Track and analyze your spending patterns
+              </p>
             </div>
-            <div className="mt-4 flex justify-center items-center">
-              <div className="w-full max-w-md">
-                <PieChartByCategory categories={data.categories} />
+
+            {/* Hero Chart: Spending History */}
+            <div className="group bg-white rounded-2xl shadow-md hover:shadow-2xl transition-all duration-300 border border-slate-200 overflow-hidden">
+              <div className="bg-gradient-to-r from-emerald-500 to-emerald-600 p-5">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="w-11 h-11 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center shadow-lg">
+                      <svg
+                        className="w-6 h-6 text-white"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        strokeWidth={2.5}
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"
+                        />
+                      </svg>
+                    </div>
+                    <div>
+                      <h2 className="text-xl font-bold text-white">
+                        Spending History
+                      </h2>
+                      <p className="text-emerald-100 text-sm">Transaction timeline</p>
+                    </div>
+                  </div>
+                  <div className="hidden md:block">
+                    <div className="bg-white/20 backdrop-blur-sm px-4 py-2 rounded-lg">
+                      <p className="text-emerald-100 text-xs font-medium">Last 30 days</p>
+                    </div>
+                  </div>
+                </div>
               </div>
+              <div className="p-0">
+                <LineChartHistory />
+              </div>
+            </div>
+
+            {/* Grid 3 Charts Below */}
+            <div className="flex flex-wrap justify-center gap-10 mt-6">
+              {/* Expense by Category */}
+              <div className="group bg-white rounded-2xl shadow-md hover:shadow-2xl transition-all duration-300 border border-slate-200 overflow-hidden w-120">
+                <div className="bg-gradient-to-r from-blue-500 to-blue-600 p-5">
+                  <div className="flex items-center gap-3">
+                    <div className="w-11 h-11 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center shadow-lg">
+                      <svg
+                        className="w-6 h-6 text-white"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        strokeWidth={2.5}
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z"
+                        />
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z"
+                        />
+                      </svg>
+                    </div>
+                    <div>
+                      <h2 className="text-lg font-bold text-white">
+                        Expense by Category
+                      </h2>
+                      <p className="text-blue-100 text-xs">Category breakdown</p>
+                    </div>
+                  </div>
+                </div>
+                <div className="p-0">
+                  <PieChartByCategory />
+                </div>
+              </div>
+
+              {/* Donut Chart Budget */}
+              <div className="group bg-white rounded-2xl shadow-md hover:shadow-2xl transition-all duration-300 border border-slate-200 overflow-hidden w-120">
+                <div className="bg-gradient-to-r from-amber-500 to-amber-600 p-5">
+                  <div className="flex items-center gap-3">
+                    <div className="w-11 h-11 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center shadow-lg">
+                      <svg
+                        className="w-6 h-6 text-white"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        strokeWidth={2.5}
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                        />
+                      </svg>
+                    </div>
+                    <div>
+                      <h2 className="text-lg font-bold text-white">
+                        Total Budget
+                      </h2>
+                      <p className="text-amber-100 text-xs">Budget utilization</p>
+                    </div>
+                  </div>
+                </div>
+                <div className="p-0">
+                  <DonutChartBudget />
+                </div>
+              </div>
+
+              {/* Year Overview */}
+              <div className="group bg-white rounded-2xl shadow-md hover:shadow-2xl transition-all duration-300 border border-slate-200 overflow-hidden w-180">
+                <div className="bg-gradient-to-r from-purple-500 to-purple-600 p-5">
+                  <div className="flex items-center gap-3">
+                    <div className="w-11 h-11 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center shadow-lg">
+                      <svg
+                        className="w-6 h-6 text-white"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        strokeWidth={2.5}
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 4 0 01-2 2h-2a2 2 0 01-2-2z"
+                        />
+                      </svg>
+                    </div>
+                    <div>
+                      <h2 className="text-lg font-bold text-white">
+                        Year Overview
+                      </h2>
+                      <p className="text-purple-100 text-xs">Annual comparison</p>
+                    </div>
+                  </div>
+                </div>
+                <div className="p-0">
+                  <BarChartByCategory />
+                </div>
+              </div>
+            </div>
+
+            {/* Footer Note */}
+            <div className="mt-8 text-center">
+              <p className="text-slate-500 text-sm">
+                Last updated: {new Date().toLocaleDateString('en-US', { 
+                  month: 'long', 
+                  day: 'numeric', 
+                  year: 'numeric',
+                  hour: '2-digit',
+                  minute: '2-digit'
+                })}
+              </p>
             </div>
           </div>
 
-          {/* Budget đã dùng */}
-          <div className="bg-white p-6 rounded-2xl shadow-lg hover:shadow-2xl transition-shadow duration-300 border border-slate-200">
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-10 h-10 bg-gradient-to-br from-amber-500 to-amber-600 rounded-xl flex items-center justify-center">
-                {/* ↑ Sửa */}
-                <svg
-                  className="w-6 h-6 text-white"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                  />
-                </svg>
-              </div>
-              <h2 className="text-xl font-bold text-slate-800">
-                Your total budget
-              </h2>
-            </div>
-            <div className="mt-4 flex justify-center items-center">
-              <div className="w-full max-w-md">
-                <DonutChartBudget />
-              </div>
-            </div>
-          </div>
-
-          {/* So sánh chi tiêu theo category */}
-          <div className="bg-white p-6 rounded-2xl shadow-lg hover:shadow-2xl transition-shadow duration-300 border border-slate-200">
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl flex items-center justify-center">
-                {/* ↑ Sửa */}
-                <svg
-                  className="w-6 h-6 text-white"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
-                  />
-                </svg>
-              </div>
-              <h2 className="text-xl font-bold text-slate-800">
-                Year Overview
-              </h2>
-            </div>
-            <div className="mt-4 max-w-full">
-              <BarChartByCategory monthlySpent={data.monthlySpent} />
-            </div>
-          </div>
-
-          {/* Lịch sử chi tiêu */}
-          <div className="bg-white p-6 rounded-2xl shadow-lg hover:shadow-2xl transition-shadow duration-300 border border-slate-200">
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-10 h-10 bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-xl flex items-center justify-center">
-                {/* ↑ Sửa */}
-                <svg
-                  className="w-6 h-6 text-white"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"
-                  />
-                </svg>
-              </div>
-              <h2 className="text-xl font-bold text-slate-800">
-                Spending History
-              </h2>
-            </div>
-            <div className="mt-4 max-w-full">
-              <LineChartHistory/>
-            </div>
-          </div>
-        </div>
       )}
     </div>
   );

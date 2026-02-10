@@ -18,11 +18,11 @@ Budget.hasMany(Transaction, { foreignKey: "budget_id" });
 
 // Category
 Category.belongsTo(User, { foreignKey: "user_id" });
-Category.hasMany(Transaction, { foreignKey: "category_id" });
+Category.hasMany(Transaction, { foreignKey: "category_id", as: "transactions" });
 
 // Transaction
 Transaction.belongsTo(User, { foreignKey: "user_id" });
-Transaction.belongsTo(Category, { foreignKey: "category_id" });
+Transaction.belongsTo(Category, { foreignKey: "category_id", as: "category" });
 Transaction.belongsTo(Budget, { foreignKey: "budget_id" });
 
 /* ========== EXPORTS ========== */

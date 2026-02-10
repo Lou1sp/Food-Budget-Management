@@ -1,33 +1,43 @@
 import { Request, Response } from "express";
 import { Category } from "../models";
-import { Transaction } from "sequelize";
+import { Transaction } from "../models";
+import { fn, col, literal, Op } from "sequelize";
 export default async function getCategory(req: Request, res: Response) {
   const userID = (req as any).user.id;
 
   const month = parseInt(req.query.month as string, 10);
   const year = parseInt(req.query.year as string, 10);
 
-  const from = new Date(year, month - 1, 1);
-  const to = new Date(year, month, 0);
-
   const categories = await Category.findAll({
-    where: { user_id: userID },
+    attributes: [
+      "id",
+      "name",
+      "user_id",
+      [fn("COALESCE", fn("SUM", col("transactions.amount")), 0), "total_spent"],
+    ],
+    include: [
+      {
+        model: Transaction,
+        as: "transactions",
+        attributes: [],
+        required: false, // LEFT JOIN
+        duplicating: false,
+        where: {
+          user_id: userID,
+          [Op.and]: [
+            literal(`EXTRACT(YEAR FROM "transactions"."spent_at") = ${year}`),
+            literal(`EXTRACT(MONTH FROM "transactions"."spent_at") = ${month}`),
+          ],
+        },
+      },
+    ],
+    group: ["Category.id", "Category.user_id"],
+    order: [["name", "ASC"]],
+    raw: true,
   });
 
   console.log("Query result: ", categories);
-
   res.json(categories);
 }
 
-//This is the query for this controller
-/*
-SELECT c.id, c.name, c.user_id,
-COALESCE (SUM(t.amount), 0) AS "total_spent"
-FROM "marketCategory" AS c
-LEFT JOIN transactions as t
-  ON c.id = t.category_id
-  AND t.user_id = c.user_id
-WHERE EXTRACT(YEAR FROM t.spent_at) = 2026 AND EXTRACT(MONTH FROM t.spent_at) = 2
-GROUP BY c.id, c.user_id 
-ORDER BY c.name
-*/
+
