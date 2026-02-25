@@ -163,7 +163,7 @@ export default function LineChartHistory() {
       </div>
 
       {/* Chart */}
-      <div className="relative w-full aspect-[16/9] h-100">
+      <div className="w-full aspect-[16/9] h-100">
         <Line data={userData} options={options} />
       </div>
 

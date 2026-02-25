@@ -7,7 +7,7 @@ interface Categories {
   total_spent: number;
 }
 
-export default function GetCategoryAPI() {
+export default function GetCategoryAPI(monthAttribute: number, yearAttribute: number) {
   const { token } = useAuth();
   const [categories, setCategories] = useState<Categories[]>([]);
 
@@ -17,7 +17,7 @@ export default function GetCategoryAPI() {
     const fetchCategories = async () => {
       try {
         const res = await fetch(
-          `http://localhost:5000/api/data/categories?month=2&year=2026`,
+          `http://localhost:5000/api/data/categories?month=${monthAttribute}&year=${yearAttribute}`,
           {
             headers: { Authorization: `Bearer ${token}` },
           },
@@ -32,6 +32,6 @@ export default function GetCategoryAPI() {
       }
     };
     fetchCategories();
-  }, [token]);
+  }, [token, monthAttribute, yearAttribute]);
   return categories;
 }

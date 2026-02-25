@@ -26,7 +26,9 @@ export default async function getBudgetByMonth(req: Request, res: Response) {
 
     console.log('Returning budget:', budgets.amount);
     res.json({ 
-      budget: budgets.amount
+      budget: budgets.amount,
+      month: monthNum,
+      year: yearNum
     });
 
   } catch (err) {

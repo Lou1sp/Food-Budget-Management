@@ -36,7 +36,6 @@ export default async function getCategory(req: Request, res: Response) {
     raw: true,
   });
 
-  console.log("Query result: ", categories);
   res.json(categories);
 }
 

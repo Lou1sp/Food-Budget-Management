@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/hooks/userAuth';
-
-export default function GetBudgetAPI() {
+export default function GetBudgetAPI(monthAttribute:number, yearAttribute:number) {
   const { token } = useAuth();
   const [budget, setBudget] = useState(0);
   useEffect(() => {
@@ -10,14 +9,14 @@ export default function GetBudgetAPI() {
     const fetchBudget = async () => {
       try {
         const res = await fetch(
-          `http://localhost:5000/api/data/budgets?month=1&year=2025`,
+          `http://localhost:5000/api/data/budgets?month=${monthAttribute}&year=${yearAttribute}`,
           {
             headers: { Authorization: `Bearer ${token}` },
           },
         );
         if (!res.ok) throw new Error(`Cannot fetch budget data: ${res.status}`);
         console.log(res.status);
-        const data = await res.json();
+        const data = await res.json( );
         console.log(data);
         setBudget(data.budget);
       } catch (err) {
@@ -26,7 +25,7 @@ export default function GetBudgetAPI() {
     };
 
     fetchBudget();
-  }, [token]);
+  }, [token, monthAttribute, yearAttribute]);
 
   return budget;
 }

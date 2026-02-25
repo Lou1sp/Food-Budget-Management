@@ -39,7 +39,6 @@ export default function PieChartByCategory() {
             family: "'Inter', 'SF Pro', system-ui, sans-serif",
             weight: 500,
           },
-          padding: 15,
           usePointStyle: true,
           pointStyle: 'circle',
           color: '#334155',
@@ -102,7 +101,7 @@ export default function PieChartByCategory() {
       </div>
 
       {/* Chart */}
-      <div className="relative mb-6 w-full" >
+      <div className="mb-6 w-full" >
         <Pie data={data} options={options} />
       </div>
     </div>

@@ -1,6 +1,7 @@
 import { Bar } from 'react-chartjs-2';
 import generateColors from '@/hooks/generateColors';
 import GetYearHistoryAPI from '@/api/getYearHistoryAPI';
+import { useState } from 'react';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -13,11 +14,14 @@ import {
   AnimationSpec,
 } from 'chart.js';
 
+interface BarChartComponent{
+  yearAttribute: number;
+}
 ChartJS.register(CategoryScale, LinearScale, BarElement, Tooltip, Legend);
 
 
-export default function BarChartByCategory() {
-  const monthlySpent = GetYearHistoryAPI();
+export default function BarChartByCategory({yearAttribute}:BarChartComponent) {
+  const monthlySpent = GetYearHistoryAPI(yearAttribute);
   const COLORS = generateColors(monthlySpent.length);
 
   const data = {
