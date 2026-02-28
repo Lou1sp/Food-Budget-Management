@@ -14,14 +14,14 @@ import {
   AnimationSpec,
 } from 'chart.js';
 
-interface BarChartComponent{
-  yearAttribute: number;
+interface ChosenYear {
+  chosenYear: number;
 }
+
 ChartJS.register(CategoryScale, LinearScale, BarElement, Tooltip, Legend);
 
-
-export default function BarChartByCategory({yearAttribute}:BarChartComponent) {
-  const monthlySpent = GetYearHistoryAPI(yearAttribute);
+export default function BarChartByCategory({ chosenYear }: ChosenYear) {
+  const monthlySpent = GetYearHistoryAPI(chosenYear);
   const COLORS = generateColors(monthlySpent.length);
 
   const data = {
@@ -51,7 +51,6 @@ export default function BarChartByCategory({yearAttribute}:BarChartComponent) {
     plugins: {
       legend: { display: false },
       tooltip: {
-        backgroundColor: '#111827',
         titleFont: { size: 14, weight: 'bold' },
         bodyFont: { size: 13 },
         padding: 12,
@@ -65,19 +64,23 @@ export default function BarChartByCategory({yearAttribute}:BarChartComponent) {
       },
     },
     scales: {
-      x: { grid: { display: false }, ticks: { font: { size: 13, weight: 500 } } },
+      x: {
+        grid: { display: false },
+        ticks: { font: { size: 13, weight: 500 } },
+      },
       y: {
         grid: { color: 'rgba(0,0,0,0.05)' },
         ticks: {
           font: { size: 12 },
-          callback: (value: string | number) => `$${Number(value).toLocaleString()}`,
+          callback: (value: string | number) =>
+            `$${Number(value).toLocaleString()}`,
         },
       },
     },
   };
 
   return (
-    <div className="mt-15 h-72 md:h-96 ml-5 mr-5">
+    <div className="mt-15 h-72 md:h-96  ml-5 mr-5">
       <Bar data={data} options={options} />
     </div>
   );

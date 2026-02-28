@@ -1,5 +1,5 @@
 'use client';
-
+import { ChosenYearAndMonth } from './DonutChartBudget';
 import GetTransactionAPI from '@/api/getTransactionAPI';
 import { Line } from 'react-chartjs-2';
 import {
@@ -30,8 +30,8 @@ interface Transaction {
   spent_at: string;
 }
 
-export default function LineChartHistory() {
-  const transaction: Transaction[] = GetTransactionAPI();
+export default function LineChartHistory({chosenMonth, chosenYear}: ChosenYearAndMonth) {
+  const transaction: Transaction[] = GetTransactionAPI(chosenMonth, chosenYear);
 
   // Calculate statistics
   const amounts = transaction.map((t) => t.amount);

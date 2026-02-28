@@ -10,7 +10,7 @@ interface Transaction {
   note?: string;
 }
 
-export default function GetTransactionAPI() {
+export default function GetTransactionAPI(monthAttribute: number, yearAttribute: number) {
   const { token } = useAuth();
   const [transaction, setTransaction] = useState<Transaction[]>([]);
 
@@ -20,7 +20,7 @@ export default function GetTransactionAPI() {
     const fetchTransaction = async () => {
       try {
         const res = await fetch(
-          `http://localhost:5000/api/data/transactions?month=2&year=2026`,
+          `http://localhost:5000/api/data/transactions?month=${monthAttribute}&year=${yearAttribute}`,
           {
             headers: { Authorization: `Bearer ${token}` },
           },
@@ -36,6 +36,6 @@ export default function GetTransactionAPI() {
       }
     };
     fetchTransaction();
-  }, [token]);
+  }, [token, monthAttribute, yearAttribute]);
   return transaction;
 }

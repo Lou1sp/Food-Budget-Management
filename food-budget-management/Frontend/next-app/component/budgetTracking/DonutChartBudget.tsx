@@ -3,14 +3,13 @@ import { TooltipItem, ChartOptions } from 'chart.js';
 import GetCategoryAPI from '@/api/getCategoryAPI';
 import GetBudgetAPI from '@/api/getBudgetAPI';
 
-interface Month{
-  monthAttribute: number
-  yearAttribute: number
+export interface ChosenYearAndMonth{
+  chosenMonth: number,
+  chosenYear: number
 }
-export default function DonutChartBudget({monthAttribute, yearAttribute}: Month) {
-  const categories = GetCategoryAPI(monthAttribute, yearAttribute);
-  let budget = GetBudgetAPI(monthAttribute, yearAttribute);
-  console.log("hello" + budget);
+export default function DonutChartBudget({chosenMonth, chosenYear}: ChosenYearAndMonth) {
+  const categories = GetCategoryAPI(chosenMonth, chosenYear);
+  let budget = GetBudgetAPI(chosenMonth, chosenYear);
   const totalSpent = categories.reduce((sum, cat) => sum + Number(cat.total_spent), 0);
   if (budget < totalSpent) budget = totalSpent;
 

@@ -2,11 +2,10 @@ import { Pie } from 'react-chartjs-2';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend, ChartOptions, TooltipItem } from 'chart.js';
 import generateColors from '@/hooks/generateColors';
 import GetCategoryAPI from '@/api/getCategoryAPI';
-
+import { ChosenYearAndMonth } from './DonutChartBudget';
 ChartJS.register(ArcElement, Tooltip, Legend);
-
-export default function PieChartByCategory() {
-  const categories = GetCategoryAPI();
+export default function PieChartByCategory({chosenMonth, chosenYear}: ChosenYearAndMonth) {
+  const categories = GetCategoryAPI(chosenMonth, chosenYear);
   const COLORS = generateColors(categories.length);
 
   // Calculate statistics
