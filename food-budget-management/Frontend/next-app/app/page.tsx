@@ -11,6 +11,7 @@ import LineChartHistory from '@/component/budgetTracking/LineChartHistory';
 import DonutChartBudget from '@/component/budgetTracking/DonutChartBudget';
 import BarChartByCategory from '@/component/budgetTracking/BarChartCompare';
 import NewTransaction from '@/component/budgetTracking/NewTransactionCreation';
+import CategoriesDropDown from '@/component/budgetTracking/CategoriesDropDown';
 import { useAuth } from '@/hooks/userAuth';
 import { useState, useEffect } from 'react';
 const month = {
@@ -35,6 +36,7 @@ export default function Home() {
   const { token } = useAuth();
   const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
   const [currentMonth, setCurrentMonth] = useState(new Date().getMonth() + 1);
+  const [newTransactionCheck, setNewTransactionCheck] = useState(0);
   console.log(currentMonth);
   useEffect(() => {
     const id = setTimeout(() => setIsMounted(true), 0);
@@ -42,7 +44,7 @@ export default function Home() {
   }, []);
 
   const isLoggedIn = token != null;
-  console.log("Modal Open" + modalOpen);
+  //Whenever a new transaction is made, update the CheckPoint, which will update a new number and pass it down to the children, so children will update in the useEffect
   return (
     <div className="bg-black min-h-screen relative">
       {/* Header & Sidebar */}
@@ -89,6 +91,8 @@ export default function Home() {
             <NewTransaction
               open={modalOpen}
               onClose={() => setModalOpen(false)}
+              handleNewTransaction={() => setNewTransactionCheck(prev => prev + 1)}
+              checkPoint={newTransactionCheck}
             />
             {/* Period Filter Bar */}
             <div className="flex items-center gap-2 bg-gray-200 backdrop-blur-sm px-10 py-5 rounded-2xl border border-slate-200 shadow-sm">
@@ -175,7 +179,7 @@ export default function Home() {
                         {year}
                       </option>
                     );
-                  })}
+                      })}
                 </select>
                 <div className="pointer-events-none absolute inset-y-0 right-2.5 flex items-center">
                   <svg
@@ -224,16 +228,12 @@ export default function Home() {
                   </p>
                 </div>
               </div>
-              <div className="hidden md:block bg-white/20 backdrop-blur-sm px-4 py-2 rounded-lg">
-                <p className="text-emerald-100 text-xs font-medium">
-                  Last 30 days
-                </p>
-              </div>
             </div>
             <div className="p-0">
               <LineChartHistory
                 chosenMonth={currentMonth}
                 chosenYear={currentYear}
+                checkPoint={newTransactionCheck}
               />
             </div>
           </div>
@@ -242,8 +242,9 @@ export default function Home() {
           <div className="flex flex-wrap justify-center gap-10 mt-6">
             {/* Expense by Category */}
             <div className="group bg-white rounded-2xl shadow-md hover:shadow-2xl transition-all duration-300 border border-slate-200 overflow-hidden relative w-159 sm:w-120">
-              <div className="bg-gradient-to-r from-blue-500 to-blue-600 p-5 flex items-center gap-3">
-                <div className="relative z-10 w-11 h-11 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center shadow-lg">
+              <div className="bg-gradient-to-r from-blue-500 to-blue-600 p-5 flex items-center justify-between">
+                <div className="flex gap-3">
+                  <div className="relative z-10 w-11 h-11 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center shadow-lg">
                   <svg
                     className="w-6 h-6 text-white"
                     fill="none"
@@ -269,11 +270,14 @@ export default function Home() {
                   </h2>
                   <p className="text-blue-100 text-xs">Category breakdown</p>
                 </div>
+                </div>
+                <CategoriesDropDown handleNewCategory={() => setNewTransactionCheck(prev => prev + 1)} checkPoint={newTransactionCheck}></CategoriesDropDown>
               </div>
               <div className="p-0">
                 <PieChartByCategory
                   chosenMonth={currentMonth}
                   chosenYear={currentYear}
+                  checkPoint={newTransactionCheck}
                 />
               </div>
             </div>
@@ -309,6 +313,7 @@ export default function Home() {
                 <DonutChartBudget
                   chosenMonth={currentMonth}
                   chosenYear={currentYear}
+                  checkPoint={newTransactionCheck}
                 />
               </div>
             </div>
@@ -342,7 +347,7 @@ export default function Home() {
                 <div className="relative"></div>
               </div>
               <div className="p-0">
-                <BarChartByCategory chosenYear={currentYear} />
+                <BarChartByCategory chosenYear={currentYear} checkPoint={newTransactionCheck}/>
               </div>
             </div>
           </div>

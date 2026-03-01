@@ -2,15 +2,11 @@ import { useAuth } from '@/hooks/userAuth';
 import { useState, useEffect } from 'react';
 
 interface Transaction {
-  id: number;
-  user_id: number;
-  category_id: number;
-  amount: number;
-  spent_at: string;
-  note?: string;
+  date: Date,
+  total_amount: number
 }
 
-export default function GetTransactionAPI(monthAttribute: number, yearAttribute: number) {
+export default function GetTransactionAPI(monthAttribute: number | undefined, yearAttribute: number | undefined, checkPoint: number) {
   const { token } = useAuth();
   const [transaction, setTransaction] = useState<Transaction[]>([]);
 
@@ -36,6 +32,6 @@ export default function GetTransactionAPI(monthAttribute: number, yearAttribute:
       }
     };
     fetchTransaction();
-  }, [token, monthAttribute, yearAttribute]);
+  }, [token, monthAttribute, yearAttribute, checkPoint]);
   return transaction;
 }

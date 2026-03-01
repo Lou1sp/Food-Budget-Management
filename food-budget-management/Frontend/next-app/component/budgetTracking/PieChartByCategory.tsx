@@ -4,8 +4,8 @@ import generateColors from '@/hooks/generateColors';
 import GetCategoryAPI from '@/api/getCategoryAPI';
 import { ChosenYearAndMonth } from './DonutChartBudget';
 ChartJS.register(ArcElement, Tooltip, Legend);
-export default function PieChartByCategory({chosenMonth, chosenYear}: ChosenYearAndMonth) {
-  const categories = GetCategoryAPI(chosenMonth, chosenYear);
+export default function PieChartByCategory({chosenMonth, chosenYear, checkPoint}: ChosenYearAndMonth) {
+  const categories = GetCategoryAPI(chosenMonth, chosenYear, checkPoint);
   const COLORS = generateColors(categories.length);
 
   // Calculate statistics

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/hooks/userAuth';
-export default function GetBudgetAPI(monthAttribute:number, yearAttribute:number) {
+export default function GetBudgetAPI(monthAttribute:number | undefined, yearAttribute:number | undefined, checkPoint: number) {
   const { token } = useAuth();
   const [budget, setBudget] = useState(0);
   useEffect(() => {
@@ -25,7 +25,7 @@ export default function GetBudgetAPI(monthAttribute:number, yearAttribute:number
     };
 
     fetchBudget();
-  }, [token, monthAttribute, yearAttribute]);
+  }, [token, monthAttribute, yearAttribute, checkPoint]);
 
   return budget;
 }

@@ -7,7 +7,7 @@ interface Categories {
   total_spent: number;
 }
 
-export default function GetCategoryAPI(monthAttribute: number, yearAttribute: number) {
+export default function GetCategoryAPI(monthAttribute: number | undefined, yearAttribute: number | undefined, checkPoint: number) {
   const { token } = useAuth();
   const [categories, setCategories] = useState<Categories[]>([]);
 
@@ -32,11 +32,11 @@ export default function GetCategoryAPI(monthAttribute: number, yearAttribute: nu
       }
     };
     fetchCategories();
-  }, [token, monthAttribute, yearAttribute]);
+  }, [token, monthAttribute, yearAttribute, checkPoint]);
   return categories;
 }
 
-export function GetAllCategoriesAPI(){
+export function GetAllCategoriesAPI(checkPoint: number){
   const {token} = useAuth();
   const[categories, setCategories] = useState<Categories[]>([]);
 
@@ -61,7 +61,7 @@ export function GetAllCategoriesAPI(){
       }
     };
     fetchCategories();
-  }, [token]);
+  }, [token, checkPoint]);
 
   return categories;
 }

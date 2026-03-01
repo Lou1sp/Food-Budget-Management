@@ -4,12 +4,13 @@ import GetCategoryAPI from '@/api/getCategoryAPI';
 import GetBudgetAPI from '@/api/getBudgetAPI';
 
 export interface ChosenYearAndMonth{
-  chosenMonth: number,
-  chosenYear: number
+  chosenMonth?: number,
+  chosenYear?: number,
+  checkPoint: number,
 }
-export default function DonutChartBudget({chosenMonth, chosenYear}: ChosenYearAndMonth) {
-  const categories = GetCategoryAPI(chosenMonth, chosenYear);
-  let budget = GetBudgetAPI(chosenMonth, chosenYear);
+export default function DonutChartBudget({chosenMonth, chosenYear, checkPoint}: ChosenYearAndMonth) {
+  const categories = GetCategoryAPI(chosenMonth, chosenYear, checkPoint);
+  let budget = GetBudgetAPI(chosenMonth, chosenYear, checkPoint);
   const totalSpent = categories.reduce((sum, cat) => sum + Number(cat.total_spent), 0);
   if (budget < totalSpent) budget = totalSpent;
 

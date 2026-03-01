@@ -22,19 +22,23 @@ ChartJS.register(
   LineElement,
   Tooltip,
   Legend,
-  Filler
+  Filler,
 );
 
 interface Transaction {
-  amount: number;
-  spent_at: string;
+  date: Date,
+  total_amount: number
 }
 
-export default function LineChartHistory({chosenMonth, chosenYear}: ChosenYearAndMonth) {
-  const transaction: Transaction[] = GetTransactionAPI(chosenMonth, chosenYear);
+export default function LineChartHistory({
+  chosenMonth,
+  chosenYear,
+  checkPoint,
+}: ChosenYearAndMonth) {
+  const transaction: Transaction[] = GetTransactionAPI(chosenMonth, chosenYear, checkPoint);
 
   // Calculate statistics
-  const amounts = transaction.map((t) => t.amount);
+  const amounts = transaction.map((t) => t.total_amount);
   const totalSpent = amounts.reduce((sum, amount) => sum + Number(amount), 0);
   const avgSpent = amounts.length > 0 ? totalSpent / amounts.length : 0;
   const maxSpent = amounts.length > 0 ? Math.max(...amounts) : 0;
@@ -43,8 +47,11 @@ export default function LineChartHistory({chosenMonth, chosenYear}: ChosenYearAn
 
   const userData = {
     labels: transaction.map((t) => {
-      const date = new Date(t.spent_at);
-      return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+      const date = new Date(t.date + 'T00:00:00');
+      return date.toLocaleDateString('en-US', {
+        month: 'short',
+        day: 'numeric',
+      });
     }),
     datasets: [
       {
@@ -110,9 +117,11 @@ export default function LineChartHistory({chosenMonth, chosenYear}: ChosenYearAn
           afterLabel: (context: TooltipItem<'line'>) => {
             const value = Number(context.parsed.y || 0);
             const diff = value - avgSpent;
-            const diffPercent = avgSpent > 0 ? ((diff / avgSpent) * 100).toFixed(1) : '0';
+            const diffPercent =
+              avgSpent > 0 ? ((diff / avgSpent) * 100).toFixed(1) : '0';
             if (diff > 0) return `↑ ${diffPercent}% above average`;
-            if (diff < 0) return `↓ ${Math.abs(Number(diffPercent))}% below average`;
+            if (diff < 0)
+              return `↓ ${Math.abs(Number(diffPercent))}% below average`;
             return 'At average';
           },
         },
@@ -123,7 +132,10 @@ export default function LineChartHistory({chosenMonth, chosenYear}: ChosenYearAn
         beginAtZero: true,
         grid: { color: 'rgba(0,0,0,0.05)' },
         ticks: {
-          font: { size: 12, family: "'Inter', 'SF Pro', system-ui, sans-serif" },
+          font: {
+            size: 12,
+            family: "'Inter', 'SF Pro', system-ui, sans-serif",
+          },
           color: '#64748b',
           padding: 8,
           callback: (tickValue) => `$${Number(tickValue).toLocaleString()}`,
@@ -133,7 +145,10 @@ export default function LineChartHistory({chosenMonth, chosenYear}: ChosenYearAn
       x: {
         grid: { display: false },
         ticks: {
-          font: { size: 12, family: "'Inter', 'SF Pro', system-ui, sans-serif" },
+          font: {
+            size: 12,
+            family: "'Inter', 'SF Pro', system-ui, sans-serif",
+          },
           color: '#64748b',
           padding: 8,
           maxRotation: 45,
@@ -145,20 +160,32 @@ export default function LineChartHistory({chosenMonth, chosenYear}: ChosenYearAn
   };
 
   return (
-    <div >
+    <div>
       {/* Statistics Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mb-6 ml-5 mr-5 mt-5">
         <div className="bg-gradient-to-br from-indigo-50 to-indigo-100 p-4 rounded-xl min-w-0">
-          <p className="text-xs font-medium text-indigo-600 mb-1 truncate">Total Spent</p>
-          <p className="text-lg font-bold text-indigo-700 truncate">{formatCurrency(totalSpent)}</p>
+          <p className="text-xs font-medium text-indigo-600 mb-1 truncate">
+            Total Spent
+          </p>
+          <p className="text-lg font-bold text-indigo-700 truncate">
+            {formatCurrency(totalSpent)}
+          </p>
         </div>
         <div className="bg-gradient-to-br from-purple-50 to-purple-100 p-4 rounded-xl min-w-0">
-          <p className="text-xs font-medium text-purple-600 mb-1 truncate">Average</p>
-          <p className="text-lg font-bold text-purple-700 truncate">{formatCurrency(avgSpent)}</p>
+          <p className="text-xs font-medium text-purple-600 mb-1 truncate">
+            Average
+          </p>
+          <p className="text-lg font-bold text-purple-700 truncate">
+            {formatCurrency(avgSpent)}
+          </p>
         </div>
         <div className="bg-gradient-to-br from-pink-50 to-pink-100 p-4 rounded-xl min-w-0">
-          <p className="text-xs font-medium text-pink-600 mb-1 truncate">Highest</p>
-          <p className="text-lg font-bold text-pink-700 truncate">{formatCurrency(maxSpent)}</p>
+          <p className="text-xs font-medium text-pink-600 mb-1 truncate">
+            Highest
+          </p>
+          <p className="text-lg font-bold text-pink-700 truncate">
+            {formatCurrency(maxSpent)}
+          </p>
         </div>
       </div>
 
@@ -175,15 +202,21 @@ export default function LineChartHistory({chosenMonth, chosenYear}: ChosenYearAn
               <span className="text-2xl">📈</span>
               <div>
                 <p className="text-xs text-red-600 font-medium">Trending Up</p>
-                <p className="text-xs text-red-500">Spending increased from last day</p>
+                <p className="text-xs text-red-500">
+                  Spending increased from last day
+                </p>
               </div>
             </div>
           ) : amounts[amounts.length - 1] < amounts[amounts.length - 2] ? (
             <div className="flex items-center gap-2 px-4 py-2 bg-green-50 border border-green-200 rounded-lg">
               <span className="text-2xl">📉</span>
               <div>
-                <p className="text-xs text-green-600 font-medium">Trending Down</p>
-                <p className="text-xs text-green-500">Great! Spending decreased from last day</p>
+                <p className="text-xs text-green-600 font-medium">
+                  Trending Down
+                </p>
+                <p className="text-xs text-green-500">
+                  Great! Spending decreased from last day
+                </p>
               </div>
             </div>
           ) : (
@@ -191,7 +224,9 @@ export default function LineChartHistory({chosenMonth, chosenYear}: ChosenYearAn
               <span className="text-2xl">➡️</span>
               <div>
                 <p className="text-xs text-blue-600 font-medium">Steady</p>
-                <p className="text-xs text-blue-500">Spending unchanged from last day</p>
+                <p className="text-xs text-blue-500">
+                  Spending unchanged from last day
+                </p>
               </div>
             </div>
           )}

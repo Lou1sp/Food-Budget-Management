@@ -5,7 +5,7 @@ interface YearHistory {
   month: string;
   total_spent: number;
 }
-export default function GetYearHistoryAPI(year:number) {
+export default function GetYearHistoryAPI(year:number, checkPoint: number) {
   const { token } = useAuth();
   const [monthlyExpense, setMonthlyExpense] = useState<YearHistory[]>([]);
 
@@ -31,6 +31,6 @@ export default function GetYearHistoryAPI(year:number) {
       }
     };
     fetchYearHistory();
-  }, [token, year]);
+  }, [token, year, checkPoint]);
   return monthlyExpense;
 }

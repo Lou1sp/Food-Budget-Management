@@ -16,12 +16,13 @@ import {
 
 interface ChosenYear {
   chosenYear: number;
+  checkPoint: number
 }
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Tooltip, Legend);
 
-export default function BarChartByCategory({ chosenYear }: ChosenYear) {
-  const monthlySpent = GetYearHistoryAPI(chosenYear);
+export default function BarChartByCategory({ chosenYear, checkPoint }: ChosenYear) {
+  const monthlySpent = GetYearHistoryAPI(chosenYear, checkPoint);
   const COLORS = generateColors(monthlySpent.length);
 
   const data = {

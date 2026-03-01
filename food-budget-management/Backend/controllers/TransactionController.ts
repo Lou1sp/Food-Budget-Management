@@ -1,7 +1,38 @@
 import { Request, Response } from "express";
 import { Transaction } from "../models";
+import { Op, fn, col } from "sequelize";
 
-export default async function createTransaction(req: Request, res: Response){
+export default async function getTransactionsByMonth(req: Request, res: Response) {
+  const userID = (req as any).user.id;
+
+  const month = parseInt(req.query.month as string, 10);
+  const year = parseInt(req.query.year as string, 10);
+
+  const from = new Date(year, month - 1, 1);
+  const to = new Date(year, month, 0);
+
+  try {
+    const dailyTransactions = await Transaction.findAll({
+      attributes: [
+        [fn('DATE', col('spent_at')), 'date'], 
+        [fn('SUM', col('amount')), 'total_amount'], 
+      ],
+      where: {
+        user_id: userID,
+        spent_at: { [Op.between]: [from, to] },
+      },
+      group: [fn('DATE', col('spent_at'))], 
+      order: [[fn('DATE', col('spent_at')), 'ASC']], 
+    });
+
+    res.json(dailyTransactions);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Failed to fetch daily transactions" });
+  }
+}
+
+export async function createTransaction(req: Request, res: Response){
     try{
         const userID = (req as any).user.id;
         const {category_id, amount, spent_at, note} = req.body;
