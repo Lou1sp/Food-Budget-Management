@@ -16,7 +16,7 @@ export default function GetBudgetAPI(monthAttribute:number | undefined, yearAttr
         );
         if (!res.ok) throw new Error(`Cannot fetch budget data: ${res.status}`);
         console.log(res.status);
-        const data = await res.json( );
+        const data = await res.json();
         console.log(data);
         setBudget(data.budget);
       } catch (err) {

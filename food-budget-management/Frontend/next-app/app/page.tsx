@@ -12,6 +12,9 @@ import DonutChartBudget from '@/component/budgetTracking/DonutChartBudget';
 import BarChartByCategory from '@/component/budgetTracking/BarChartCompare';
 import NewTransaction from '@/component/budgetTracking/NewTransactionCreation';
 import CategoriesDropDown from '@/component/budgetTracking/CategoriesDropDown';
+import NewBudget from '@/component/budgetTracking/NewBudgetCreation';
+import BudgetDropDown from '@/component/budgetTracking/BudgetUpdateDropDown';
+import MonthlyExpenseList from '@/component/budgetTracking/TransactionList';
 import { useAuth } from '@/hooks/userAuth';
 import { useState, useEffect } from 'react';
 const month = {
@@ -30,7 +33,8 @@ const month = {
 };
 
 export default function Home() {
-  const [modalOpen, setModalOpen] = useState(false);
+  const [transactionModalOpen, setTransactionModalOpen] = useState(false);
+  const [budgetModalOpen, setBudgetModalOpen] = useState(false);
   const [sideBarOpen, setSideBarState] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
   const { token } = useAuth();
@@ -81,17 +85,31 @@ export default function Home() {
                 Track and analyze your spending patterns
               </p>
             </div>
+            <div className="flex gap-10">
             {/* Button mở modal */}
             <button
-              onClick={() => setModalOpen(true)}
+              onClick={() => setTransactionModalOpen(true)}
               className="bg-emerald-500 text-white font-semibold px-6 py-3 rounded-xl shadow-lg hover:bg-emerald-600 transition-colors"
             >
               Add Transaction
             </button>
+            <button
+              onClick={() => setBudgetModalOpen(true)}
+              className="bg-emerald-500 text-white font-semibold px-6 py-3 rounded-xl shadow-lg hover:bg-emerald-600 transition-colors"
+            >
+              Create Budget
+            </button>
+            </div>
             <NewTransaction
-              open={modalOpen}
-              onClose={() => setModalOpen(false)}
+              open={transactionModalOpen}
+              onClose={() => setTransactionModalOpen(false)}
               handleNewTransaction={() => setNewTransactionCheck(prev => prev + 1)}
+              checkPoint={newTransactionCheck}
+            />
+            <NewBudget
+              open={budgetModalOpen}
+              onClose={() => setBudgetModalOpen(false)}
+              handleNewBudget={() => setNewTransactionCheck(prev => prev + 1)}
               checkPoint={newTransactionCheck}
             />
             {/* Period Filter Bar */}
@@ -201,8 +219,9 @@ export default function Home() {
           </div>
 
           {/* Hero Chart: Spending History */}
-          <div className="group bg-white rounded-2xl shadow-md hover:shadow-2xl transition-all duration-300 border border-slate-200 overflow-hidden relative">
-            <div className="bg-gradient-to-r from-emerald-500 to-emerald-600 p-5 flex justify-between items-center">
+          <div className="flex gap-10 items-start">
+          <div className="group bg-white rounded-2xl shadow-md hover:shadow-2xl transition-all duration-300 border border-slate-200 overflow-hidden relative flex-4/5">
+            <div className="h-22 bg-gradient-to-r from-emerald-500 to-emerald-600 p-5 flex justify-between items-center">
               <div className="flex items-center gap-3">
                 <div className="relative z-10 w-11 h-11 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center shadow-lg">
                   <svg
@@ -236,6 +255,10 @@ export default function Home() {
                 checkPoint={newTransactionCheck}
               />
             </div>
+          </div>
+          <div className="flex-1/5">
+            <MonthlyExpenseList chosenMonth={currentMonth} chosenYear={currentYear} checkPoint={newTransactionCheck}></MonthlyExpenseList>
+          </div>
           </div>
 
           {/* Grid 3 Charts Below */}
@@ -308,6 +331,8 @@ export default function Home() {
                     <p className="text-amber-100 text-xs">Budget utilization</p>
                   </div>
                 </div>
+                <BudgetDropDown chosenMonth={currentMonth}
+                  chosenYear={currentYear} handleNewCategory={() => setNewTransactionCheck(prev => prev + 1)} checkPoint={newTransactionCheck}></BudgetDropDown>
               </div>
               <div className="p-0">
                 <DonutChartBudget

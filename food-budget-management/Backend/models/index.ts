@@ -6,7 +6,7 @@ import Category from "./marketCategory";
 import Transaction from "./dailyTransaction";
 
 /* ========== ASSOCIATIONS ========== */
-
+//All the belongsTo... means JOIN ... ON ..., so later when query we dont actually need to write like in Postgres
 // User
 User.hasMany(Budget, { foreignKey: "user_id" });
 User.hasMany(Category, { foreignKey: "user_id" });

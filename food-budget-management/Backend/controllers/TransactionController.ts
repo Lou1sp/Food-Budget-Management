@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { Transaction } from "../models";
 import { Op, fn, col } from "sequelize";
+import {Category} from "../models";
 
 export default async function getTransactionsByMonth(req: Request, res: Response) {
   const userID = (req as any).user.id;
@@ -13,17 +14,22 @@ export default async function getTransactionsByMonth(req: Request, res: Response
 
   try {
     const dailyTransactions = await Transaction.findAll({
-      attributes: [
-        [fn('DATE', col('spent_at')), 'date'], 
-        [fn('SUM', col('amount')), 'total_amount'], 
-      ],
-      where: {
-        user_id: userID,
-        spent_at: { [Op.between]: [from, to] },
+    where: {
+      user_id: userID,
+      spent_at: {
+        [Op.between]: [from, to],
       },
-      group: [fn('DATE', col('spent_at'))], 
-      order: [[fn('DATE', col('spent_at')), 'ASC']], 
-    });
+    },
+    include: [
+      {
+        model: Category,
+        as: "category",
+        attributes: ["name"], // chỉ lấy name
+      },
+    ],
+    attributes: ["id", "amount", "spent_at", "note"],
+    order: [["spent_at", "DESC"]],
+  });
 
     res.json(dailyTransactions);
   } catch (error) {

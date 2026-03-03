@@ -2,11 +2,20 @@ import { useAuth } from '@/hooks/userAuth';
 import { useState, useEffect } from 'react';
 
 interface Transaction {
-  date: Date,
-  total_amount: number
+  id: number;
+  amount: number;
+  spent_at: Date;
+  note?: string;
+  category: {
+    name: string;
+  };
 }
 
-export default function GetTransactionAPI(monthAttribute: number | undefined, yearAttribute: number | undefined, checkPoint: number) {
+export default function GetTransactionAPI(
+  monthAttribute: number | undefined,
+  yearAttribute: number | undefined,
+  checkPoint: number,
+) {
   const { token } = useAuth();
   const [transaction, setTransaction] = useState<Transaction[]>([]);
 

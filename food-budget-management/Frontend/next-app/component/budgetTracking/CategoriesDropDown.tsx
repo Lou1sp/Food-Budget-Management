@@ -35,7 +35,7 @@ export default function CategoriesDropDown({checkPoint, handleNewCategory}: Prop
                           e.preventDefault();
               
                           const result = await PostCategoryAPI(token, newCategory)
-              
+                          console.log(result + "Hello Siuuuuuu");
                           if (result) {
                             setNewCategory("");
                             handleNewCategory();
@@ -64,7 +64,6 @@ export default function CategoriesDropDown({checkPoint, handleNewCategory}: Prop
                           const result = await DeleteCategoryAPI(token, cat.id)
               
                           if (result) {
-                            setNewCategory("");
                             handleNewCategory();
                           }
                         }}
