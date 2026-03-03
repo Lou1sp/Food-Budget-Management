@@ -28,8 +28,8 @@ export default function MonthlyExpenseList({
 
 
   return (
-    <div className="relative overflow-scroll max-h-[700px]">
-      <h2 className="h-22 mb-5 mt-0.5 bg-gradient-to-r from-emerald-600 to-emerald-500 p-4 flex justify-between items-center rounded-t-2xl font-bold sticky top-0 z-10">
+    <div className="relative overflow-scroll max-h-[700px] mt-0.5">
+      <h2 className="box-border h-22 mb-5 bg-gradient-to-r from-emerald-600 to-emerald-500 p-4 flex justify-between items-center rounded-t-2xl font-bold sticky top-0 z-10">
         Monthly Expenses
       </h2>
 
