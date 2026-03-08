@@ -5,7 +5,7 @@ export default class Transaction extends Model {
   declare user_id: number;
   declare category_id: number;
   declare amount: number;
-  declare spend_at: Date;
+  declare spend_at: string;
   declare note?: string;
   declare created_at: Date;
 }

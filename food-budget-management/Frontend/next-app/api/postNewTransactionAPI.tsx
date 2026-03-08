@@ -6,6 +6,11 @@ export default async function PostTransactionAPI(
   note: string | undefined,
 ) {
   if (!date) return;
+  const localDate = new Date(date);
+  const correctedDate = new Date(
+    localDate.getTime() - localDate.getTimezoneOffset() * 60000
+  ).toISOString().split('T')[0];
+
   try {
     const res = await fetch('http://localhost:5000/api/data/newtransaction', {
       method: 'POST',
@@ -16,7 +21,7 @@ export default async function PostTransactionAPI(
       body: JSON.stringify({
         category_id: category_id,
         amount: amount,
-        spent_at: new Date(date),
+        spent_at: date,
         note: note,
       }),
     });

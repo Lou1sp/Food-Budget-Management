@@ -51,6 +51,7 @@ export  async function createCategory(req: Request, res: Response) {
   try {
     const userID = (req as any).user.id;
     const { name } = req.body;
+    
     const newCategory = await Category.create({
       user_id: userID,
       name: name,

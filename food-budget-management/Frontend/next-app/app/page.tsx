@@ -257,7 +257,7 @@ export default function Home() {
             </div>
           </div>
           <div className="flex-1/5">
-            <MonthlyExpenseList chosenMonth={currentMonth} chosenYear={currentYear} checkPoint={newTransactionCheck}></MonthlyExpenseList>
+            <MonthlyExpenseList handleDeleteTransaction={() => setNewTransactionCheck(prev => prev + 1)} chosenMonth={currentMonth} chosenYear={currentYear} checkPoint={newTransactionCheck}></MonthlyExpenseList>
           </div>
           </div>
 

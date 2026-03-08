@@ -1,14 +1,17 @@
-import GetTransactionAPI from "@/api/getTransactionAPI";
+import GetTransactionAPI from '@/api/getTransactionAPI';
+import DeleteTransactionAPI from '@/api/deleteTransactionAPI';
+import { useAuth } from '@/hooks/userAuth';
 interface Props {
   chosenMonth: number;
   chosenYear: number;
   checkPoint: number;
+  handleDeleteTransaction: () => void;
 }
 
 interface Transaction {
   id: number;
   amount: number;
-  spent_at: Date;
+  spent_at: string;
   note?: string;
   category: {
     name: string;
@@ -19,13 +22,14 @@ export default function MonthlyExpenseList({
   chosenMonth,
   chosenYear,
   checkPoint,
+  handleDeleteTransaction
 }: Props) {
-  const expenses: Transaction[]  = GetTransactionAPI(
+  const expenses: Transaction[] = GetTransactionAPI(
     chosenMonth,
     chosenYear,
-    checkPoint
+    checkPoint,
   );
-
+  const {token} = useAuth();
 
   return (
     <div className="relative overflow-scroll max-h-[700px] mt-0.5">
@@ -47,21 +51,33 @@ export default function MonthlyExpenseList({
           >
             <div className="flex justify-between items-center">
               <span className="text-sm font-medium text-gray-800">
-                {new Date(expense.spent_at).toLocaleDateString()}
+                {expense.spent_at}
               </span>
               <span className="text-sm font-semibold text-emerald-600">
                 - {expense.amount.toLocaleString()} CAD
               </span>
             </div>
 
-            <div className="text-xs text-gray-500 mt-1">
-              Category: {expense.category?.name || "Uncategorized"}
-            </div>
-
-            {expense.note && (
-              <div className="text-sm text-gray-700 mt-2">
-                {expense.note}
+            <div className="flex justify-between">
+              <div className="text-xs text-gray-500 mt-1">
+                Category: {expense.category?.name || 'Uncategorized'}
               </div>
+              <button 
+              className="text-xs text-red-400 cursor-pointer bg-red-200 px-2 py-1 rounded-xl m-1"
+              onClick={async (e) => {
+                                        e.preventDefault();
+                            
+                                        const result = await DeleteTransactionAPI(token, expense.id)
+                            
+                                        if (result) {
+                                          handleDeleteTransaction();
+                                        }
+                                      }}>
+                Delete
+              </button>
+            </div>
+            {expense.note && (
+              <div className="text-sm text-gray-700 mt-2">{expense.note}</div>
             )}
           </div>
         ))}

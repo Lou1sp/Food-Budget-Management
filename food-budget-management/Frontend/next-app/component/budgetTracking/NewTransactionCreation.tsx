@@ -40,7 +40,7 @@ export default function NewTransaction({
           className="space-y-4"
           onSubmit={async (e) => {
             e.preventDefault();
-
+            
             const result = await PostTransactionAPI(
               token,
               category,

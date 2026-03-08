@@ -1,6 +1,7 @@
 'use client';
 import { ChosenYearAndMonth } from './DonutChartBudget';
 import GetTransactionAPI from '@/api/getTransactionAPI';
+import { GetTransactionGroupByDayAPI } from '@/api/getTransactionAPI';
 import { Line } from 'react-chartjs-2';
 import {
   Chart as ChartJS,
@@ -26,13 +27,8 @@ ChartJS.register(
 );
 
 interface Transaction {
-  id: number;
-  amount: number;
-  spent_at: Date;
-  note?: string;
-  category: {
-    name: string;
-  };
+  date: Date,
+  total_amount: number;
 }
 
 export default function LineChartHistory({
@@ -40,10 +36,10 @@ export default function LineChartHistory({
   chosenYear,
   checkPoint,
 }: ChosenYearAndMonth) {
-  const transaction: Transaction[] = GetTransactionAPI(chosenMonth, chosenYear, checkPoint);
+  const transaction: Transaction[] = GetTransactionGroupByDayAPI(chosenMonth, chosenYear, checkPoint);
   console.log(transaction)
   // Calculate statistics
-  const amounts = transaction.map((t) => t.amount);
+  const amounts = transaction.map((t) => t.total_amount);
   const totalSpent = amounts.reduce((sum, amount) => sum + Number(amount), 0);
   const avgSpent = amounts.length > 0 ? totalSpent / amounts.length : 0;
   const maxSpent = amounts.length > 0 ? Math.max(...amounts) : 0;
@@ -52,8 +48,8 @@ export default function LineChartHistory({
 
   const userData = {
     labels: transaction.map((t) => {
-      const date = new Date(t.spent_at + 'T00:00:00');
-      return date.toLocaleDateString('en-US', {
+      const date = new Date(t.date + 'T00:00:00');
+      return date.toLocaleDateString('en-CA', {
         month: 'short',
         day: 'numeric',
       });
