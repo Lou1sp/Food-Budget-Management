@@ -30,7 +30,7 @@ const startServer = async () => {
   try {
     await sequelize.authenticate();
     console.log("PostgreSQL connected via Sequelize");
-    await sequelize.sync({ alter: true });
+    await sequelize.sync();
     app.listen(PORT, () => {
       console.log(`🚀 Server running on http://localhost:${PORT}`);
     });
