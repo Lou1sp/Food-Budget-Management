@@ -4,7 +4,8 @@ import User from "./userAcc";
 import Budget from "./monthlyBudget";
 import Category from "./marketCategory";
 import Transaction from "./dailyTransaction";
-
+import Products from "./products";
+import ProductPrice from "./productsPrices";
 /* ========== ASSOCIATIONS ========== */
 //All the belongsTo... means JOIN ... ON ..., so later when query we dont actually need to write like in Postgres
 // User
@@ -25,6 +26,11 @@ Transaction.belongsTo(User, { foreignKey: "user_id" });
 Transaction.belongsTo(Category, { foreignKey: "category_id", as: "category" });
 Transaction.belongsTo(Budget, { foreignKey: "budget_id" });
 
+// Product
+Products.hasMany(ProductPrice, { foreignKey: "product_id"});
+
+// ProductPrices
+ProductPrice.belongsTo(Products, { foreignKey: "product_id" });
 /* ========== EXPORTS ========== */
 export {
   sequelize,
@@ -32,4 +38,6 @@ export {
   Budget,
   Category,
   Transaction,
+  ProductPrice,
+  Products
 };

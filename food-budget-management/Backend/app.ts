@@ -5,6 +5,7 @@ import dotenv from "dotenv";
 import { sequelize } from "./models/index"; // models/index.ts export default sequelize
 import authRoute from "./routes/authRoute"
 import userData from "./routes/userData";
+import marketScraper from "./routes/marketScraper";
 dotenv.config();
 
 const app = express();
@@ -22,15 +23,18 @@ app.get("/", (req, res) => {
 //Forward auth call like /api/auth/... to authRoute
 app.use("/api/auth", authRoute)
 
-//Forward userData call lile /api/data/... to authRoute
+//Forward userData call like /api/data/... to authRoute
 app.use("/api/data", userData) 
+
+//Forward market scraping call
+app.use("/api/market", marketScraper) 
 
 // Start server only after DB connection
 const startServer = async () => {
   try {
     await sequelize.authenticate();
     console.log("PostgreSQL connected via Sequelize");
-    await sequelize.sync();
+    await sequelize.sync({force: true});
     app.listen(PORT, () => {
       console.log(`🚀 Server running on http://localhost:${PORT}`);
     });

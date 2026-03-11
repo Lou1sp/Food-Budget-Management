@@ -11,7 +11,7 @@ import { authMiddleware } from "../middleware/authMiddleware";
 import { updateBudget } from "../controllers/BudgetController";
 import { deleteTransaction } from "../controllers/TransactionController";
 import { getTransactionGroupByDay } from "../controllers/TransactionController";
-import { searchMarket } from "../controllers/marketController";
+import { searchMarket } from "../controllers/scrapingController/marketController";
 const router = Router();
 
 router.get("/budgets", authMiddleware, getBudgetByMonth)
