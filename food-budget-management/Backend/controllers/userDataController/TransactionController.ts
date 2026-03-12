@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
-import { Transaction } from "../models";
+import { Transaction } from "../../models";
 import { Op, fn, col } from "sequelize";
-import { Category } from "../models";
+import { Category } from "../../models";
 
 export default async function getTransactionsByMonth(
   req: Request,

@@ -1,7 +1,7 @@
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import { Request, Response } from "express";
-import User from "../models/userAcc";
+import User from "../../models/userAcc";
 
 export async function login(req: Request, res: Response) {
     //Receive json from frontend

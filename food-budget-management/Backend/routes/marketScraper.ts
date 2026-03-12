@@ -1,6 +1,6 @@
 import { Router } from "express";
-import { searchMarket } from "../controllers/scrapingController/marketController";
+import { searchWalmartMarket } from "../controllers/scrapingController/marketController";
 const router = Router();
 
-router.get("/search", searchMarket)
+router.get("/search", searchWalmartMarket)
 export default router;

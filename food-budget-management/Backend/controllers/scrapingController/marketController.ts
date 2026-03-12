@@ -1,8 +1,10 @@
-import { searchProduct } from "../../services/marketService";
+import { searchWalmartProduct } from "../../services/marketService";
 import { Request, Response } from "express";
-export async function searchMarket(req: Request, res: Response){
+
+// Scrape Walmart Page By Product
+export async function searchWalmartMarket(req: Request, res: Response){
     const product = req.query.product as string;
-    const result = await searchProduct(product);
+    const result = await searchWalmartProduct(product);
  
     res.json(result);
 }

@@ -1,83 +1,115 @@
-import fetch from "node-fetch";
-import { load } from "cheerio";
+import { createBrowser } from "../utils/browser";
+import { randomDelay, autoScroll } from "../utils/delay";
+import { BaseScraper } from "./baseScraper";
+import { Product } from "./baseScraper";
+export class WalmartScraper implements BaseScraper {
+  async scrape(query: string): Promise<Product[]> {
+    const results: Product[] = [];
+    const browser = await createBrowser();
 
-interface Product {
-  title: string;
-  price?: string;
-  pricePerUnit?: string;
-  image?: string;
-  id?: string;
-  brand?: string;
-}
-
-export async function scrapeWalmart(query: string) {
-  const results: Product[] = [];
-
-  for (let page = 1; page <= 10; page++) {
     try {
-      const url = `https://www.walmart.ca/en/search?q=${encodeURIComponent(query)}&page=${page}&affinityOverride=default`;
+      for (let pageNum = 1; pageNum <= 50; pageNum++) {
+        const context = await browser.createBrowserContext();
+        const page = await context.newPage();
 
-      const res = await fetch(url, {
-        headers: {
-          "user-agent":
-            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
-          "accept-language": "en-CA,en;q=0.9",
-        },
-      });
+        await page.setExtraHTTPHeaders({
+          "Accept-Language": "en-CA,en;q=0.9",
+          "User-Agent":
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) " +
+            "AppleWebKit/537.36 (KHTML, like Gecko) " +
+            "Chrome/122.0.0.0 Safari/537.36",
+        });
 
-      const html = await res.text();
-      const $ = load(html);
+        await page.setViewport({ width: 1440, height: 900 });
+        const url = `https://www.walmart.ca/en/search?q=${encodeURIComponent(query)}&page=${pageNum}&affinityOverride=default`;
+        console.log(`Scraping page ${pageNum}...`);
+        await page.goto(url, { waitUntil: "networkidle2", timeout: 30000 });
 
-      const jsonText = $("#__NEXT_DATA__").html();
-      if (!jsonText) {
-        console.log("No NEXT_DATA found");
-        break;
+        console.log("Scrolling...");
+        await autoScroll(page);
+
+        await randomDelay(1500, 3000);
+
+        await page
+          .waitForFunction(
+            () => {
+              const lazy = document.querySelectorAll('[data-rendered="false"]');
+              return lazy.length === 0;
+            },
+            { timeout: 10000 },
+          )
+          .catch(() => {
+            console.log("Some items are not finish rendering, continue...");
+          });
+
+        
+        const products: Product[] = await page.evaluate(() => {
+          const items = document.querySelectorAll("[data-item-id]");
+          const results: any[] = [];
+
+          items.forEach((item) => {
+            const title = item
+              .querySelector('[data-automation-id="product-title"]')
+              ?.textContent?.trim();
+
+            if (!title) return;
+
+            const id = item.getAttribute("data-dca-id") || undefined;
+
+            const price =
+              item
+                .querySelector('div[aria-hidden="true"].b.black')
+                ?.textContent?.trim() || undefined;
+
+            const pricePerUnit =
+              item
+                .querySelector('[data-testid="product-price-per-unit"]')
+                ?.textContent?.trim() || undefined;
+
+            const image =
+              item
+                .querySelector('[data-testid="productTileImage"]')
+                ?.getAttribute("src") || undefined;
+
+            const brand =
+              item.querySelector(".b.f6.black")?.textContent?.trim() ||
+              undefined;
+
+            const url =
+              item.querySelector("a[link-identifier]")?.getAttribute("href") ||
+              undefined;
+
+            results.push({
+              title,
+              price,
+              pricePerUnit,
+              image,
+              id,
+              brand,
+              source: "walmart",
+              url: url ? `https://www.walmart.ca${url}` : undefined,
+            });
+          });
+
+          return results;
+        });
+
+        if (products.length === 0) {
+          console.log("✅ Hết sản phẩm.");
+          await page.close();
+          break;
+        }
+
+        console.log(`✅ Page ${pageNum}: ${products.length} sản phẩm`);
+        results.push(...products);
+
+        await page.close();
+        await randomDelay(3000, 6000);
       }
-
-      const data: any = JSON.parse(jsonText);
-      const items =
-        data?.props?.pageProps?.initialData?.searchResult?.itemStacks?.[0]
-          ?.items || [];
-
-      const priceContainers = $('div[data-automation-id="product-price"]');
-
-      const products: Product[] = items.map((item: any, index: number) => {
-        const container = priceContainers.eq(index);
-
-        const price =
-          container.find("div[aria-hidden='true']").first().text().trim() ||
-          undefined;
-
-        const pricePerUnit =
-          container
-            .find('div[data-testid="product-price-per-unit"]')
-            .text()
-            .trim() || undefined;
-
-        // Brand: JSON first, DOM fallback
-        const brand =
-          item.brand ||
-          item.brandName ||
-          $(`[data-automation-id="product-brand"]`).eq(index).text().trim() ||
-          undefined;
-
-        return {
-          title: item.name,
-          price,
-          pricePerUnit,
-          image: item.image,
-          id: item.usItemId,
-          brand,
-        };
-      });
-
-      if (products.length === 0) break;
-      results.push(...products);
-    } catch (err) {
-      console.error("Walmart scrape error:", err);
-      break;
+    } finally {
+      await browser.close();
     }
-  }
 
-  return results;
+    return results;
+  }
 }

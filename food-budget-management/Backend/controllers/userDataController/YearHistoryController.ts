@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { Transaction } from "../models";
+import { Transaction } from "../../models";
 import { fn, col, literal, Op } from "sequelize";
 export default async function getYearHistory(req: Request, res: Response) {
   const userID = (req as any).user.id;

@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { Budget } from "../models";
+import { Budget } from "../../models";
 
 export default async function getBudgetByMonth(req: Request, res: Response) { 
   try {    

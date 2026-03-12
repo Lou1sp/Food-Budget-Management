@@ -41,15 +41,15 @@ ProductPrice.init(
   {
     sequelize,
     modelName: "ProductPrice",
-    tableName: "product_price",  // snake_case cho nhất quán
+    tableName: "product_price", 
     timestamps: false,
     indexes: [
       {
         unique: true,
-        fields: ["product_id", "timestamp"], // ✅ composite unique
+        fields: ["product_id", "timestamp"],
       },
       {
-        fields: ["product_id"], // index riêng để query nhanh
+        fields: ["product_id"], 
       },
     ],
   }

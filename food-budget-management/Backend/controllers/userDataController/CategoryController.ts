@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
-import { Category } from "../models";
-import { Transaction } from "../models";
+import { Category } from "../../models";
+import { Transaction } from "../../models";
 import { fn, col, literal, Op } from "sequelize";
 
 //Get category and total expense by category
