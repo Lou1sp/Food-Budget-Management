@@ -21,9 +21,9 @@ export async function searchWalmartProduct(slug: string) {
   if (!category) throw new Error(`Cannot find category: ${slug}`);
 
   for (const item of products) {
-    if (!item.id || !item.price) continue; // skip if find no id or price
+  if (!item.id || !item.price) continue;
 
-    // Upsert - if product already exist (base on the PK), then update, if not then create new
+  try {
     await Products.upsert({
       id: item.id,
       category_id: category.id,
@@ -34,16 +34,19 @@ export async function searchWalmartProduct(slug: string) {
       url: item.url,
     });
 
-    // Get the lastest price in the DB
     const latestPrice = await ProductPrice.findOne({
       where: { product_id: item.id },
       order: [["timestamp", "DESC"]],
     });
 
-    // Get the current price, if price change, create new price with timestamps for it
     const newPrice = parseFloat(item.price.replace(/[^0-9.]/g, ""));
 
-    if (!latestPrice || latestPrice.price !== newPrice) {
+    if (isNaN(newPrice)) {
+      console.log(`⚠️ Invalid price: "${item.price}", skipping...`);
+      continue;
+    }
+
+    if (!latestPrice || Number(latestPrice.price) !== newPrice) {
       await ProductPrice.create({
         product_id: item.id,
         price: newPrice,
@@ -52,5 +55,10 @@ export async function searchWalmartProduct(slug: string) {
         timestamp: new Date().toISOString().split("T")[0],
       });
     }
+  } catch (err) {
+    // Log lỗi nhưng không dừng vòng lặp
+    console.error(`❌ Error saving product ${item.id}:`, err);
+    continue;
   }
+}
 }

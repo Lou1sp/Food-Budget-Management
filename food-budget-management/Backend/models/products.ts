@@ -23,7 +23,7 @@ Products.init(
       type: DataTypes.INTEGER,
       allowNull: true,
       references: {
-        model: "market_categories",
+        model: "productCategories",
         key: "id",
       },
     },
