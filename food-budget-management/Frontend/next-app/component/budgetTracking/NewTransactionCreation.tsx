@@ -1,7 +1,7 @@
-import { GetAllCategoriesAPI } from '@/api/getCategoryAPI';
+import { GetAllCategoriesAPI } from '@/api/userData_API/getCategoryAPI';
 import { useState } from 'react';
 import { useAuth } from '@/hooks/userAuth';
-import PostTransactionAPI from '@/api/postNewTransactionAPI';
+import PostTransactionAPI from '@/api/userData_API/postNewTransactionAPI';
 interface Props {
   open: boolean;
   onClose: () => void;

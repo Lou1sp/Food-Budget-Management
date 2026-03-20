@@ -1,4 +1,9 @@
-import type { Category } from "./Grocery";
+interface Category {
+  id: string;
+  icon: string;
+  name: string;
+  count: number;
+}
 
 interface CategoryCardProps {
   category: Category;

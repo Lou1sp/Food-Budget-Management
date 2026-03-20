@@ -1,7 +1,7 @@
 import { Doughnut } from 'react-chartjs-2';
 import { TooltipItem, ChartOptions } from 'chart.js';
-import GetCategoryAPI from '@/api/getCategoryAPI';
-import GetBudgetAPI from '@/api/getBudgetAPI';
+import GetCategoryAPI from '@/api/userData_API/getCategoryAPI';
+import GetBudgetAPI from '@/api/userData_API/getBudgetAPI';
 
 export interface ChosenYearAndMonth{
   chosenMonth?: number,

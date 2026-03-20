@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useAuth } from "@/hooks/userAuth";
-import GetBudgetAPI from "@/api/getBudgetAPI";
-import PutBudgetAPI from "@/api/putBudetAPI";
+import GetBudgetAPI from "@/api/userData_API/getBudgetAPI";
+import PutBudgetAPI from "@/api/userData_API/putBudetAPI";
 interface Props{
     chosenMonth: number,
     chosenYear: number,

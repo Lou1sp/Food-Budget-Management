@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useAuth } from '@/hooks/userAuth';
-import PostBudgetAPI from '@/api/postBudgetAPI';
+import PostBudgetAPI from '@/api/userData_API/postBudgetAPI';
 interface Props {
   open: boolean;
   onClose: () => void;

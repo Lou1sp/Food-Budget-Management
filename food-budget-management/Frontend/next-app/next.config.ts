@@ -8,6 +8,19 @@ const nextConfig = {
       },
     ];
   },
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "i5.walmartimages.com",
+      },
+      // thêm các store khác luôn cho sau này
+      {
+        protocol: "https",
+        hostname: "**.walmartimages.com",
+      },
+    ],
+  },
 };
 
 module.exports = nextConfig;

@@ -1,7 +1,7 @@
 import { Pie } from 'react-chartjs-2';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend, ChartOptions, TooltipItem } from 'chart.js';
 import generateColors from '@/hooks/generateColors';
-import GetCategoryAPI from '@/api/getCategoryAPI';
+import GetCategoryAPI from '@/api/userData_API/getCategoryAPI';
 import { ChosenYearAndMonth } from './DonutChartBudget';
 ChartJS.register(ArcElement, Tooltip, Legend);
 export default function PieChartByCategory({chosenMonth, chosenYear, checkPoint}: ChosenYearAndMonth) {

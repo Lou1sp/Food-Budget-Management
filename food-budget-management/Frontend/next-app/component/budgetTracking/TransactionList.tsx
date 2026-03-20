@@ -1,5 +1,5 @@
-import GetTransactionAPI from '@/api/getTransactionAPI';
-import DeleteTransactionAPI from '@/api/deleteTransactionAPI';
+import GetTransactionAPI from '@/api/userData_API/getTransactionAPI';
+import DeleteTransactionAPI from '@/api/userData_API/deleteTransactionAPI';
 import { useAuth } from '@/hooks/userAuth';
 interface Props {
   chosenMonth: number;

@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { GetAllCategoriesAPI } from "@/api/getCategoryAPI";
-import PostCategoryAPI from "@/api/postNewCategoryAPI";
-import DeleteCategoryAPI from "@/api/deleteCategoryAPI";
+import { GetAllCategoriesAPI } from "../../api/userData_API/getCategoryAPI"
+import PostCategoryAPI from "@/api/userData_API/postNewCategoryAPI";
+import DeleteCategoryAPI from "@/api/userData_API/deleteCategoryAPI";
 import { useAuth } from "@/hooks/userAuth";
 interface Props{
     handleNewCategory: () => void;

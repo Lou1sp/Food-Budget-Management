@@ -1,9 +1,9 @@
-import type { Product, Category } from "./Grocery"
+import type { Products, Category } from "./Grocery"
 import ProductCard from './ProductCard';
 
 interface ProductGridProps {
   category: Category;
-  products: Product[];
+  products: Products[];
 }
 
 export default function ProductGrid({ category, products }: ProductGridProps) {
@@ -29,7 +29,7 @@ export default function ProductGrid({ category, products }: ProductGridProps) {
       </div>
 
       {/* Grid */}
-      <div className="grid grid-cols-[repeat(auto-fill,minmax(200px,1fr))] gap-3">
+      <div className="grid grid-cols-5 gap-10">
         {products.map((product) => (
           <ProductCard key={product.id} product={product} />
         ))}

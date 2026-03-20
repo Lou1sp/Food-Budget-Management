@@ -1,11 +1,12 @@
 "use client"
 import { useState, useRef, useEffect } from 'react';
-import { STORES, SAMPLE_PRODUCTS } from '../../component/market/GroceryDummyData';
+import { STORES } from '../../component/market/GroceryDummyData';
 import StoreSidebar from '@/component/market/StoreSideBar';
 import StoreHero from '@/component/market/StoreHero';
 import Breadcrumb from '@/component/market/BreadCrumb';
 import CategoryGrid from '@/component/market/CategoryGrid';
 import ProductGrid from '@/component/market/ProductGrid';
+import useProductAPI from '@/api/marketProducts_API/getProductAPI';
 
 export default function GroceryPage() {
   const [activeStoreId, setActiveStoreId] = useState<string>('walmart');
@@ -14,7 +15,7 @@ export default function GroceryPage() {
 
   const activeStore = STORES.find((s) => s.id === activeStoreId)!;
   const activeCategory = activeStore.categories.find((c) => c.id === activeCategoryId) ?? null;
-  const products = activeCategoryId ? (SAMPLE_PRODUCTS[activeCategoryId] ?? []) : [];
+  const products =  useProductAPI(activeCategoryId, activeStoreId);     
 
   // Switch store → reset selected category
   function handleSelectStore(storeId: string) {
