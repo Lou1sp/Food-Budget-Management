@@ -6,61 +6,62 @@ export async function searchWalmartProduct(slug: string) {
   const scraper = new WalmartScraper();
   const products = await scraper.scrape(slug);
   //save the products in cache, so later user no need to jump in the database everytime
-  
-   /* The plan is to create all the category first, for example
-   I have a category called "milk", so when user click on that category,
-   system will send a request find all products in category "milk" */
 
-   /* Second, when computer scrape, it will scrape by the {slug}. For example, I have
-   a category called "bread", when it scrape, it enter exact keywork "bread" so i know all
-   returned result can be put right into bread category */
-
-   
-   // Find category by slug
+  // Find category by slug
   const category = await ProductCategory.findOne({ where: { slug } });
   if (!category) throw new Error(`Cannot find category: ${slug}`);
 
-  for (const item of products) {
-  if (!item.id || !item.price) continue; // skip if find no id or price
+  // 1. Prepare IDs - Get all the products that has id and price, and map each of it with its own id
+  const productIds = products.filter((p) => p.id && p.price).map((p) => p.id);
 
-  try {
-    // Upsert - if product already exist (base on the PK), then update, if not then create new
-    await Products.upsert({
-      id: item.id,
-      category_id: category.id,
-      title: item.title,
-      image: item.image,
-      brand: item.brand,
-      source: "walmart",
-      url: item.url,
-    });
-    
-    // Get the lastest price in the DB
-    const latestPrice = await ProductPrice.findOne({
-      where: { product_id: item.id },
-      order: [["timestamp", "DESC"]],
-    });
-    
-    // Get the current price, if price change, create new price with timestamps for it
-    const newPrice = parseFloat(item.price.replace(/[^0-9.]/g, ""));
+  // 2. Get latest prices (1 query) - Return all price record for each of productsId above
+  const latestPricesRaw = await ProductPrice.findAll({
+    where: { product_id: productIds },
+    order: [["timestamp", "DESC"]],
+  });
 
-    if (isNaN(newPrice)) {
-      console.log(`⚠️ Invalid price: "${item.price}", skipping...`);
-      continue;
+  // 3. Build map (product_id -> latest price)
+  const latestPriceMap = new Map<string, any>();
+  // Because price are sorted in DESC, so just need to check if the product exist, if yes, it is the current newest price
+  for (const p of latestPricesRaw) {
+    if (!latestPriceMap.has(p.product_id)) {
+      latestPriceMap.set(p.product_id, p);
     }
-
-    if (!latestPrice || Number(latestPrice.price) !== newPrice) {
-      await ProductPrice.create({
-        product_id: item.id,
-        price: newPrice,
-        price_per_unit: item.pricePerUnit,
-        currency: "CAD",
-        timestamp: new Date().toISOString().split("T")[0],
-      });
-    }
-  } catch (err) {
-    console.error(`❌ Error saving product ${item.id}:`, err);
-    continue;
   }
-}
+
+  // 4. Process products
+  await Promise.all(
+    products.map(async (item) => {
+      if (!item.id || !item.price) return;
+
+      try {
+        const newPrice = parseFloat(item.price.replace(/[^0-9.]/g, ""));
+        if (isNaN(newPrice)) return;
+        // Upsert is used when a product is already exist, it will just update new information
+        await Products.upsert({
+          id: item.id,
+          category_id: category.id,
+          title: item.title,
+          image: item.image,
+          brand: item.brand,
+          source: "walmart",
+          url: item.url,
+        });
+
+        const latestPrice = latestPriceMap.get(item.id);
+
+        if (!latestPrice || Number(latestPrice.price) !== newPrice) {
+          await ProductPrice.create({
+            product_id: item.id,
+            price: newPrice,
+            price_per_unit: item.pricePerUnit,
+            currency: "CAD",
+            timestamp: new Date(),
+          });
+        }
+      } catch (err) {
+        console.error(`❌ Error saving product ${item.id}:`, err);
+      }
+    }),
+  );
 }

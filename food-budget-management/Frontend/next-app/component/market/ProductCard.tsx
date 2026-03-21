@@ -18,7 +18,7 @@ export default function ProductCard({ product }: ProductCardProps) {
           {product.title}
         </p>
         <p className="font-syne font-bold text-base text-[#7ec98a]">
-          {product.price}
+          {product.price} CAD$
         </p>
         <p className="text-[11px] text-[#4a5c4b] mt-0.5">
           {product.brand}
