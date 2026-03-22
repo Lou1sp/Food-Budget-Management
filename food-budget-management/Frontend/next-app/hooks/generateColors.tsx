@@ -1,4 +1,4 @@
-const generateColors = (num: number) => {
+ const generateColors = (num: number) => {
   const colors = [];
   for (let i = 0; i < num; i++) {
     const hue = Math.round((360 / num) * i); // chia vòng màu đều

@@ -1,7 +1,6 @@
 import { Bar } from 'react-chartjs-2';
 import generateColors from '@/hooks/generateColors';
 import GetYearHistoryAPI from '@/api/userData_API/getYearHistoryAPI';
-import { useState } from 'react';
 import {
   Chart as ChartJS,
   CategoryScale,

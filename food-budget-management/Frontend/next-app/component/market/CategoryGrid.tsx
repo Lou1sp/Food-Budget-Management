@@ -1,33 +1,53 @@
+// component/market/CategoryGrid.tsx
 import CategoryCard from './CategoryCard';
-
+import { motion } from 'framer-motion';
+import type { Products } from "./Grocery"
 export interface Category {
   id: string;
   icon: string;
   name: string;
   count: number;
 }
+
 interface CategoryGridProps {
   categories: Category[];
   activeCategoryId: string | null;
   onSelectCategory: (categoryId: string) => void;
+  products: Products[];
 }
 
-export default function CategoryGrid({ categories, activeCategoryId, onSelectCategory }: CategoryGridProps) {
+export default function CategoryGrid({ categories, activeCategoryId, onSelectCategory, products }: CategoryGridProps) {
   return (
-    <div>
-      <p className="text-[11px] tracking-[1.2px] uppercase text-[#4a5c4b] font-medium px-8 pt-6 pb-3.5">
-        Categories
-      </p>
-      <div className="grid grid-cols-10 gap-10 px-8 pb-6">
-        {categories.map((cat) => (
-          <CategoryCard
-            key={cat.id}
-            category={cat}
-            isActive={activeCategoryId === cat.id}
-            onSelect={onSelectCategory}
-          />
-        ))}
+    <div className="px-8 py-6">
+      <div className="flex items-center justify-between mb-6">
+        <div className="flex items-center gap-2">
+          <div className="w-1 h-6 bg-gradient-to-b from-amber-400 to-orange-500 rounded-full"></div>
+          <p className="text-xs font-semibold tracking-wider text-white/60 uppercase">Browse Categories</p>
+        </div>
+        <p className="text-xs text-white/40">{categories.length} categories available</p>
       </div>
+      
+      <motion.div 
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        className="grid grid-cols-10 gap-4"
+      >
+        {categories.map((cat, idx) => (
+          <motion.div
+            key={cat.id}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: idx * 0.02 }}
+          >
+            <CategoryCard
+              category={cat}
+              isActive={activeCategoryId === cat.id}
+              onSelect={onSelectCategory}
+              products={products}
+            />
+          </motion.div>
+        ))}
+      </motion.div>
     </div>
   );
 }

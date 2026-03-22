@@ -9,8 +9,8 @@ interface StoreSidebarProps {
 
 export default function StoreSidebar({ stores, activeStoreId, onSelectStore }: StoreSidebarProps) {
   return (
-    <aside className="w-[220px] bg-[#111611] border-r border-[#1e2b1f] py-6 flex-shrink-0 overflow-y-auto">
-      <p className="text-[10px] font-medium tracking-[1.5px] text-[#4a5c4b] uppercase px-5 pb-3">
+    <aside className="w-[220px] bg-slate-900  py-6 flex-shrink-0 overflow-y-auto">
+      <p className="text-[10px] font-medium tracking-[1.5px] text-white uppercase px-5 pb-3">
         Stores
       </p>
 
@@ -18,22 +18,18 @@ export default function StoreSidebar({ stores, activeStoreId, onSelectStore }: S
         const theme = STORE_THEME[store.id];
         const isActive = store.id === activeStoreId;
 
-        // Divider before Costco (index 2) to separate discount vs premium
-        const showDivider = idx === 2;
-
         return (
           <div key={store.id}>
-            {showDivider && (
-              <div className="h-px bg-[#1a2a1b] mx-0 my-3" />
-            )}
+              <div className="h-px bg-gray-500 " />
+     
             <button
               onClick={() => onSelectStore(store.id)}
               className={`
-                w-full flex items-center gap-3 px-5 py-3 text-sm text-left
+                w-full flex items-center gap-3 px-5 py-7 text-sm text-left
                 border-l-2 transition-all duration-150 cursor-pointer
                 ${isActive
-                  ? 'bg-[#162019] text-[#e8ede9] border-[#7ec98a]'
-                  : 'bg-transparent text-[#8a9e8b] border-transparent hover:bg-[#161f17] hover:text-[#c8d9c9]'
+                  ? 'bg-slate-500 text-[#e8ede9] border-white'
+                  : 'bg-transparent text-[#8a9e8b] border-transparent  hover:text-[#c8d9c9]'
                 }
               `}
             >
