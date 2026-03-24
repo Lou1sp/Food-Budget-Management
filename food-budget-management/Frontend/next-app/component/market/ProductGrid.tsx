@@ -43,7 +43,8 @@ export default function ProductGrid({ category, products }: ProductGridProps) {
         </div>
       </motion.div>
 
-      <div className="grid grid-cols-5 gap-6">
+      <div className="grid gap-4 
+  [grid-template-columns:repeat(auto-fit,minmax(250px,1fr))]">
         {products.map((product, idx) => (
           <motion.div
             key={product.id}

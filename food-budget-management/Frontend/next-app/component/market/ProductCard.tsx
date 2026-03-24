@@ -43,7 +43,7 @@ export default function ProductCard({ product }: ProductCardProps) {
           </p>
         </div>
         
-        <p className="text-xs text-white/40 mb-3">{product.brand}</p>
+        <p className="text-xs text-white/40 mb-3">{product.brand ?? "No Brand"}</p>
         
         <div className="flex items-center justify-between">
           <div>

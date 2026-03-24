@@ -5,7 +5,5 @@ export async function getProductByCategoryandSource(req: Request, res: Response)
     const category = req.query.category as string;
 
     const result = await getProductByCategory(category, market);
-    console.log("---------------------" + result);
-
     res.json(result);
 }

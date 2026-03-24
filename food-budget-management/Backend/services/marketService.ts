@@ -6,7 +6,7 @@ export async function searchWalmartProduct(slug: string) {
   const scraper = new WalmartScraper();
   const products = await scraper.scrape(slug);
   //save the products in cache, so later user no need to jump in the database everytime
-
+  
   // Find category by slug
   const category = await ProductCategory.findOne({ where: { slug } });
   if (!category) throw new Error(`Cannot find category: ${slug}`);
@@ -35,7 +35,12 @@ export async function searchWalmartProduct(slug: string) {
       if (!item.id || !item.price) return;
 
       try {
-        const newPrice = parseFloat(item.price.replace(/[^0-9.]/g, ""));
+        const priceString = item.price;
+        let newPrice: number;
+        if(priceString.includes("¢")){
+          newPrice = parseFloat(priceString.replace(/[^0-9.]/g, "")) / 100;
+        }
+        else newPrice = parseFloat(item.price.replace(/[^0-9.]/g, ""));
         if (isNaN(newPrice)) return;
         // Upsert is used when a product is already exist, it will just update new information
         await Products.upsert({

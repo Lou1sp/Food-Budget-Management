@@ -4,6 +4,9 @@ import { searchWalmartMarket } from "../controllers/marketController/marketContr
 import { getProductByCategoryandSource } from "../controllers/productController/productController";
 const router = Router();
 
-router.get("/search", searchWalmartMarket)
+//These routes are to scrape market
+router.get("/walmart", searchWalmartMarket)
+
+//These routes are to work with scraped data
 router.get("/products", getProductByCategoryandSource)
 export default router;
