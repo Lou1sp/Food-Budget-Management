@@ -12,7 +12,7 @@ export interface Product {
 }
 
 export interface ScrapeSelectors {
-  item: string;        
+  item: string;
   title: string;
   price: string;
   pricePerUnit: string;
@@ -50,39 +50,58 @@ export abstract class BaseScraper {
         await autoScroll(page);
         await randomDelay(1500, 3000);
 
-        await page.waitForFunction(
-          () => document.querySelectorAll('[data-rendered="false"]').length === 0,
-          { timeout: 10000 }
-        ).catch(() => console.log("Some items not rendered, continuing..."));
+        await page
+          .waitForFunction(
+            () =>
+              document.querySelectorAll('[data-rendered="false"]').length === 0,
+            { timeout: 10000 },
+          )
+          .catch(() => console.log("Some items not rendered, continuing..."));
 
         // Inject selectors into browser context
         const sel = this.selectors;
         const source = this.source;
 
-        const products: Product[] = await page.evaluate((sel, source) => {
-          const items = document.querySelectorAll(sel.item);
-          const results: any[] = [];
+        const products: Product[] = await page.evaluate(
+          (sel, source) => {
+            const items = document.querySelectorAll(sel.item);
+            const results: any[] = [];
 
-          items.forEach(item => {
-            const title = item.querySelector(sel.title)?.textContent?.trim();
-            if (!title) return;
+            items.forEach((item) => {
+              const title = item.querySelector(sel.title)?.textContent?.trim();
+              if (!title) return;
 
-            const url = item.querySelector(sel.url)?.getAttribute("href");
+              const href = item.querySelector(sel.url)?.getAttribute("href");
+              let url: string | undefined;
 
-            results.push({
-              title,
-              price: item.querySelector(sel.price)?.textContent?.trim(),
-              pricePerUnit: item.querySelector(sel.pricePerUnit)?.textContent?.trim(),
-              image: item.querySelector(sel.image)?.getAttribute("src"),
-              brand: item.querySelector(sel.brand)?.textContent?.trim(),
-              id: item.getAttribute("data-dca-id"),
-              source,
-              url: url ? `https://www.walmart.ca${url}` : undefined,
+              if (href) {
+                try {
+                  // Create new URL from the relative one
+                  url = new URL(href, window.location.origin).href;
+                } catch {
+                  url = undefined;
+                }
+              }
+
+              results.push({
+                title,
+                price: item.querySelector(sel.price)?.textContent?.trim(),
+                pricePerUnit: item
+                  .querySelector(sel.pricePerUnit)
+                  ?.textContent?.trim(),
+                image: item.querySelector(sel.image)?.getAttribute("src"),
+                brand: item.querySelector(sel.brand)?.textContent?.trim(),
+                id: item.getAttribute("data-dca-id") || item.querySelector("h3[id]")?.getAttribute("id"),
+                source,
+                url,
+              });
             });
-          });
 
-          return results;
-        }, sel, source);
+            return results;
+          },
+          sel,
+          source,
+        );
 
         if (products.length === 0) {
           console.log("✅ End of pages.");

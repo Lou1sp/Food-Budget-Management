@@ -4,16 +4,16 @@ export class NoFrillsScraper extends BaseScraper {
     protected maxPages = 50;
 
     protected buildUrl(query: string, page: number): string {
-    return `https://www.walmart.ca/en/search?q=${encodeURIComponent(query)}&page=${page}&affinityOverride=default`;
+    return `https://www.nofrills.ca/en/search?search-bar=${encodeURIComponent(query)}&storeId=3640&page=${page}`;
   }
 
   protected selectors = {
-    item: "[data-item-id]",
-    title: '[data-automation-id="product-title"]',
-    price: 'div[aria-hidden="true"].b.black',
-    pricePerUnit: '[data-testid="product-price-per-unit"]',
-    image: '[data-testid="productTileImage"]',
-    brand: ".b.f6.black",
-    url: "a[link-identifier]",
+    item: '[class="chakra-linkbox css-yxqevf"]',
+    title: '[data-testid="product-title"]',
+    price: '[data-testid="regular-price"]',
+    pricePerUnit: '[data-testid="product-package-size"]',
+    image: '[class="chakra-image css-1qfh40k"]',
+    brand: '[data-testid="product-brand"]',
+    url: 'a[class="chakra-linkbox__overlay css-1hnz6hu"]',
   };
 }

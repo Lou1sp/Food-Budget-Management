@@ -1,7 +1,7 @@
 import { BaseScraper } from "./baseScraper";
 export class WalmartScraper extends BaseScraper {
   protected source = "walmart";
-  protected maxPages = 50;
+  protected maxPages = 100;
 
   protected buildUrl(query: string, page: number): string {
     return `https://www.walmart.ca/en/search?q=${encodeURIComponent(query)}&page=${page}&affinityOverride=default`;

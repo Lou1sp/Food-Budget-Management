@@ -1,12 +1,32 @@
 import { WalmartScraper } from "../scrapers/walmartScraper";
 import { Products } from "../models";
+import { Product } from "../scrapers/baseScraper";
 import { ProductPrice } from "../models";
 import { ProductCategory } from "../models";
+import { NoFrillsScraper } from "../scrapers/nofrillsScraper";
+
+
+// Scrape Walmart Market
 export async function searchWalmartProduct(slug: string) {
   const scraper = new WalmartScraper();
   const products = await scraper.scrape(slug);
-  //save the products in cache, so later user no need to jump in the database everytime
   
+  saveScrapedData(slug, products);
+  
+  
+}
+
+// Scrape NoFrills Market
+export async function searchNoFrillsProduct(slug: string) {
+  const scraper = new NoFrillsScraper();
+  const products = await scraper.scrape(slug);
+
+  saveScrapedData(slug, products);
+}
+
+
+// Save scraped data into Database
+async function saveScrapedData(slug: string, products: Product[]){
   // Find category by slug
   const category = await ProductCategory.findOne({ where: { slug } });
   if (!category) throw new Error(`Cannot find category: ${slug}`);
